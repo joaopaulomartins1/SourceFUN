@@ -6,6 +6,7 @@ import io.github.thebusybiscuit.slimefun4.api.recipes.RecipeType;
 import me.JOTTA.SourceFUN.SourceFUN;
 import me.JOTTA.SourceFUN.items.groups.SourceFUNItemGroups;
 import me.JOTTA.SourceFUN.items.machines.AdvancedPusher;
+import me.JOTTA.SourceFUN.items.machines.WardenEssenceMiner;
 import me.JOTTA.SourceFUN.items.machines.Wardenassembly;
 import org.bukkit.Material;
 import org.bukkit.inventory.ItemStack;
@@ -16,7 +17,7 @@ import org.bukkit.inventory.ItemFlag;
 public class ItemsSetup {
 
     public static void setup(SourceFUN plugin) {
-        // --- SEUS OUTROS ITENS ---
+        // advanced pusher
         new AdvancedPusher(
                 SourceFUNItemGroups.MACHINES,
                 new SlimefunItemStack("ADVANCED_PUSHER", Material.RED_STAINED_GLASS, "§6Advanced Pusher", "", "§7Pusher padrão com mais slots"),
@@ -27,15 +28,20 @@ public class ItemsSetup {
                         new ItemStack(Material.PISTON), new ItemStack(Material.GOLD_INGOT), new ItemStack(Material.PISTON)
                 }
         ).register(plugin);
-
+// warden assembly
         new Wardenassembly(
                 SourceFUNItemGroups.MACHINES,
-                new SlimefunItemStack("WARDEN_ASSEMBLER", Material.SCULK_CATALYST, "§5Warden Assembler", "", "§x§9§2§0§0§0§0End-Game Machine", "§8⇨ §e⚡ §7Consumo: 4096 J/t", "§8⇨ §b❄ §7Capacidade: 8192 J"),
+                new SlimefunItemStack("WARDEN_ASSEMBLER", Material.SCULK_CATALYST,
+                        "§5Warden Assembler", "",
+                        "§x§9§2§0§0§0§0End-Game Machine",
+                        "§8⇨ §e⚡ §7Consumo: 4096 J/t",
+                        "§8⇨ §b❄ §7Capacidade: 8192 J"),
                 RecipeType.ENHANCED_CRAFTING_TABLE,
                 new ItemStack[] {
                         new ItemStack(Material.SCULK_CATALYST), null, null, null, null, null, null, null, null
                 }).register(plugin);
 
+        // --- WARDEN ESSENCE ---
         // --- WARDEN ESSENCE ---
         SlimefunItemStack wardenEssence = new SlimefunItemStack(
                 "WARDEN_ESSENCE",
@@ -48,7 +54,7 @@ public class ItemsSetup {
         new SlimefunItem(
                 SourceFUNItemGroups.RESOURCES,
                 wardenEssence,
-                RecipeType.MOB_DROP,
+                RecipeType.NULL,
                 new ItemStack[] { null, null, null, null, new ItemStack(Material.WARDEN_SPAWN_EGG), null, null, null, null }
         ).register(plugin);
 
@@ -76,9 +82,9 @@ public class ItemsSetup {
         SlimefunItemStack unbreakableSword = new SlimefunItemStack(
                 "UNBREAKING_SWORD",
                 Material.IRON_SWORD,
-                "&x&5&4&D&A&F&4Espada indestrutivel ",
+                "&x&5&4&D&A&F&4Espada indestrutível ",
                 "",
-                "&7Lâmina indestrutivel",
+                "&7Lâmina indestrutível",
                 "&8(Indestrutível)"
         );
 
@@ -101,13 +107,13 @@ public class ItemsSetup {
                 }
         ).register(plugin);
 
-        // --- VARA DE PESCA INDESTRUTÍVEL (CORRIGIDO) ---
+        //  VARA DE PESCA INDESTRUTÍVEL
         SlimefunItemStack unbreakingfisher = new SlimefunItemStack(
                 "UNBREAKING_FISHER",
                 Material.FISHING_ROD,
-                "&x&5&4&D&A&F&4Vara de pesca indestrutivel ",
+                "&x&5&4&D&A&F&4Vara de pesca indestrutível ",
                 "",
-                "&7Fio indestrutivel",
+                "&7Fio indestrutível",
                 "&8(Indestrutível)"
         );
 
@@ -121,7 +127,7 @@ public class ItemsSetup {
 
         new SlimefunItem(
                 SourceFUNItemGroups.TOOLS,
-                unbreakingfisher, // <--- Aqui estava unbreakableSword
+                unbreakingfisher,
                 RecipeType.ENHANCED_CRAFTING_TABLE,
                 new ItemStack[] {
                         null, null, wardenEssence,
@@ -129,6 +135,26 @@ public class ItemsSetup {
                         new ItemStack(Material.STICK), null, new ItemStack(Material.STRING)
                 }
         ).register(plugin);
+        SlimefunItemStack minerStack = new SlimefunItemStack(
+                "WARDEN_ESSENCE_MINER",
+                Material.SCULK_CATALYST,
+                "&5Warden Essence Miner",
+                "",
+                "§x§9§2§0§0§0§0End-Game Machine",
+                "§8⇨ §e⚡ §7Consumo: 4096 J/t",
+                "§8⇨ §b❄ §7Capacidade: 8024 J"
+        );
+        new WardenEssenceMiner(
+                SourceFUNItemGroups.MACHINES,
+                minerStack,
+                RecipeType.ENHANCED_CRAFTING_TABLE,
+                new ItemStack[] {
+                        new ItemStack(Material.NETHERITE_BLOCK), wardenEssence, new ItemStack(Material.NETHERITE_BLOCK),
+                        wardenEssence, new ItemStack(Material.NETHER_STAR), wardenEssence,
+                        new ItemStack(Material.NETHERITE_BLOCK), wardenEssence, new ItemStack(Material.NETHERITE_BLOCK)
+                }
+        ).register(plugin);
+
 
         plugin.getLogger().info("§a[SourceFUN] Itens configurados com sucesso!");
     }

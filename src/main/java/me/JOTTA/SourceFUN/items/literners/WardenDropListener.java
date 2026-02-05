@@ -12,7 +12,6 @@ public class WardenDropListener implements Listener {
 
     @EventHandler
     public void onWardenDeath(EntityDeathEvent e) {
-        // Verifica se quem morreu foi um Warden
         if (e.getEntityType() == EntityType.WARDEN) {
 
             // Lógica de Chance: 20% (0 a 100 < 20)
