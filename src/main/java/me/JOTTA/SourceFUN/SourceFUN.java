@@ -1,84 +1,61 @@
 package me.JOTTA.SourceFUN;
 
-import org.bukkit.Material;
-import org.bukkit.NamespacedKey;
-import org.bukkit.inventory.ItemStack;
+import me.JOTTA.SourceFUN.items.ItemsSetup;
+import me.JOTTA.SourceFUN.items.groups.SourceFUNItemGroups;
+import me.JOTTA.SourceFUN.items.literners.WardenDropListener;
 import org.bukkit.plugin.java.JavaPlugin;
 
-import io.github.thebusybiscuit.slimefun4.api.items.ItemGroup;
-import io.github.thebusybiscuit.slimefun4.api.items.SlimefunItem;
-import io.github.thebusybiscuit.slimefun4.api.items.SlimefunItemStack;
-import io.github.thebusybiscuit.slimefun4.api.recipes.RecipeType;
 import io.github.thebusybiscuit.slimefun4.api.SlimefunAddon;
-import io.github.thebusybiscuit.slimefun4.libraries.dough.config.Config;
-import io.github.thebusybiscuit.slimefun4.libraries.dough.items.CustomItemStack;
 
-public class ExampleAddon extends JavaPlugin implements SlimefunAddon {
+public class SourceFUN extends JavaPlugin implements SlimefunAddon {
+
+    private static SourceFUN instance;
 
     @Override
     public void onEnable() {
-        // Read something from your config.yml
-        Config cfg = new Config(this);
+        instance = this;
+        getLogger().info("§a[SourceFUN] Iniciando...");
 
-        if (cfg.getBoolean("options.auto-update")) {
-            // You could start an Auto-Updater for example
+        try {
+
+            SourceFUNItemGroups.setup(this);
+
+
+            ItemsSetup.setup(this);
+            getServer().getPluginManager().registerEvents(new WardenDropListener(), this);
+
+            getLogger().info("""
+                    *******************************
+                    -------------------------------
+                    SOURCEFUN
+                    -------------------------------
+                    *******************************""");
+
+
+
+        } catch (Exception e) {
+            getLogger().severe("§c[SourceFUN] Erro: " + e.getMessage());
+            e.printStackTrace();
         }
-
-        /*
-         * 1. Creating a new Category
-         * This Category will use the following ItemStack
-         */
-        ItemStack itemGroupItem = new CustomItemStack(Material.DIAMOND, "&4Addon Category", "", "&a> Click to open");
-
-        // Give your Category a unique id.
-        NamespacedKey itemGroupId = new NamespacedKey(this, "addon_category");
-        ItemGroup itemGroup = new ItemGroup(itemGroupId, itemGroupItem);
-
-        /*
-         * 2. Create a new SlimefunItemStack
-         * This class has many constructors, it is very important
-         * that you give each item a unique id.
-         */
-        SlimefunItemStack slimefunItem = new SlimefunItemStack("COOL_DIAMOND", Material.DIAMOND, "&4Cool Diamond", "&c+20% Coolness");
-
-        /*
-         * 3. Creating a Recipe
-         * The Recipe is an ItemStack Array with a length of 9.
-         * It represents a Shaped Recipe in a 3x3 crafting grid.
-         * The machine in which this recipe is crafted in is specified
-         * further down as the RecipeType.
-         */
-        ItemStack[] recipe = { new ItemStack(Material.EMERALD), null, new ItemStack(Material.EMERALD), null, new ItemStack(Material.DIAMOND), null, new ItemStack(Material.EMERALD), null, new ItemStack(Material.EMERALD) };
-
-        /*
-         * 4. Registering the Item
-         * Now you just have to register the item.
-         * RecipeType.ENHANCED_CRAFTING_TABLE refers to the machine in
-         * which this item is crafted in.
-         * Recipe Types from Slimefun itself will automatically add the recipe to that machine.
-         */
-        SlimefunItem item = new SlimefunItem(itemGroup, slimefunItem, RecipeType.ENHANCED_CRAFTING_TABLE, recipe);
-        item.register(this);
     }
 
     @Override
     public void onDisable() {
-        // Logic for disabling the plugin...
+        getLogger().info("§c[SourceFUN] Desativado.");
     }
 
-    @Override
-    public String getBugTrackerURL() {
-        // You can return a link to your Bug Tracker instead of null here
-        return null;
+    // IMPORTANTE: Só retorna instance DEPOIS de onEnable()
+    public static SourceFUN getInstance() {
+        return instance;  // Pode ser null se chamado ANTES de onEnable()
     }
 
     @Override
     public JavaPlugin getJavaPlugin() {
-        /*
-         * You will need to return a reference to your Plugin here.
-         * If you are using your main class for this, simply return "this".
-         */
         return this;
     }
 
+    @Override
+    public String getBugTrackerURL() {
+        return null;
+    }
 }

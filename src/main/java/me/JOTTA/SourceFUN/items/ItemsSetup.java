@@ -1,4 +1,135 @@
 package me.JOTTA.SourceFUN.items;
 
-public class items {
+import io.github.thebusybiscuit.slimefun4.api.items.SlimefunItem;
+import io.github.thebusybiscuit.slimefun4.api.items.SlimefunItemStack;
+import io.github.thebusybiscuit.slimefun4.api.recipes.RecipeType;
+import me.JOTTA.SourceFUN.SourceFUN;
+import me.JOTTA.SourceFUN.items.groups.SourceFUNItemGroups;
+import me.JOTTA.SourceFUN.items.machines.AdvancedPusher;
+import me.JOTTA.SourceFUN.items.machines.Wardenassembly;
+import org.bukkit.Material;
+import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.meta.ItemMeta;
+import org.bukkit.enchantments.Enchantment;
+import org.bukkit.inventory.ItemFlag;
+
+public class ItemsSetup {
+
+    public static void setup(SourceFUN plugin) {
+        // --- SEUS OUTROS ITENS ---
+        new AdvancedPusher(
+                SourceFUNItemGroups.MACHINES,
+                new SlimefunItemStack("ADVANCED_PUSHER", Material.RED_STAINED_GLASS, "§6Advanced Pusher", "", "§7Pusher padrão com mais slots"),
+                RecipeType.ENHANCED_CRAFTING_TABLE,
+                new ItemStack[] {
+                        new ItemStack(Material.PISTON), new ItemStack(Material.GOLD_INGOT), new ItemStack(Material.PISTON),
+                        new ItemStack(Material.GOLD_INGOT), new ItemStack(Material.REDSTONE_BLOCK), new ItemStack(Material.GOLD_INGOT),
+                        new ItemStack(Material.PISTON), new ItemStack(Material.GOLD_INGOT), new ItemStack(Material.PISTON)
+                }
+        ).register(plugin);
+
+        new Wardenassembly(
+                SourceFUNItemGroups.MACHINES,
+                new SlimefunItemStack("WARDEN_ASSEMBLER", Material.SCULK_CATALYST, "§5Warden Assembler", "", "§x§9§2§0§0§0§0End-Game Machine", "§8⇨ §e⚡ §7Consumo: 4096 J/t", "§8⇨ §b❄ §7Capacidade: 8192 J"),
+                RecipeType.ENHANCED_CRAFTING_TABLE,
+                new ItemStack[] {
+                        new ItemStack(Material.SCULK_CATALYST), null, null, null, null, null, null, null, null
+                }).register(plugin);
+
+        // --- WARDEN ESSENCE ---
+        SlimefunItemStack wardenEssence = new SlimefunItemStack(
+                "WARDEN_ESSENCE",
+                Material.ECHO_SHARD,
+                "&x&5&4&D&A&F&4Warden Essence",
+                "",
+                "§7Essência vinda de tempos antigos"
+        );
+
+        new SlimefunItem(
+                SourceFUNItemGroups.RESOURCES,
+                wardenEssence,
+                RecipeType.MOB_DROP,
+                new ItemStack[] { null, null, null, null, new ItemStack(Material.WARDEN_SPAWN_EGG), null, null, null, null }
+        ).register(plugin);
+
+        // --- WARDEN BLOCK ---
+        SlimefunItemStack warderEssenceBlock = new SlimefunItemStack(
+                "WARDEN_ESSENCE_BLOCK",
+                Material.SCULK,
+                "&x&5&4&D&A&F&4Warden Essence Block",
+                "",
+                "§7Bloco de warden essence"
+        );
+
+        new SlimefunItem(
+                SourceFUNItemGroups.RESOURCES,
+                warderEssenceBlock,
+                RecipeType.ENHANCED_CRAFTING_TABLE,
+                new ItemStack[]{
+                        wardenEssence, wardenEssence, wardenEssence,
+                        wardenEssence, wardenEssence, wardenEssence,
+                        wardenEssence, wardenEssence, wardenEssence
+                }
+        ).register(plugin);
+
+        // --- ESPADA INDESTRUTÍVEL ---
+        SlimefunItemStack unbreakableSword = new SlimefunItemStack(
+                "UNBREAKING_SWORD",
+                Material.IRON_SWORD,
+                "&x&5&4&D&A&F&4Espada indestrutivel ",
+                "",
+                "&7Lâmina indestrutivel",
+                "&8(Indestrutível)"
+        );
+
+        ItemMeta swordMeta = unbreakableSword.getItemMeta();
+        if (swordMeta != null) {
+            swordMeta.setUnbreakable(true);
+            swordMeta.addEnchant(Enchantment.DURABILITY, 1, true);
+            swordMeta.addItemFlags(ItemFlag.HIDE_UNBREAKABLE, ItemFlag.HIDE_ENCHANTS);
+            unbreakableSword.setItemMeta(swordMeta);
+        }
+
+        new SlimefunItem(
+                SourceFUNItemGroups.TOOLS,
+                unbreakableSword,
+                RecipeType.ENHANCED_CRAFTING_TABLE,
+                new ItemStack[] {
+                        null, wardenEssence, null,
+                        null, wardenEssence, null,
+                        null, new ItemStack(Material.STICK), null
+                }
+        ).register(plugin);
+
+        // --- VARA DE PESCA INDESTRUTÍVEL (CORRIGIDO) ---
+        SlimefunItemStack unbreakingfisher = new SlimefunItemStack(
+                "UNBREAKING_FISHER",
+                Material.FISHING_ROD,
+                "&x&5&4&D&A&F&4Vara de pesca indestrutivel ",
+                "",
+                "&7Fio indestrutivel",
+                "&8(Indestrutível)"
+        );
+
+        ItemMeta fisherMeta = unbreakingfisher.getItemMeta();
+        if (fisherMeta != null) {
+            fisherMeta.setUnbreakable(true);
+            fisherMeta.addEnchant(Enchantment.DURABILITY, 1, true);
+            fisherMeta.addItemFlags(ItemFlag.HIDE_UNBREAKABLE, ItemFlag.HIDE_ENCHANTS);
+            unbreakingfisher.setItemMeta(fisherMeta);
+        }
+
+        new SlimefunItem(
+                SourceFUNItemGroups.TOOLS,
+                unbreakingfisher, // <--- Aqui estava unbreakableSword
+                RecipeType.ENHANCED_CRAFTING_TABLE,
+                new ItemStack[] {
+                        null, null, wardenEssence,
+                        null, new ItemStack(Material.STICK), new ItemStack(Material.STRING),
+                        new ItemStack(Material.STICK), null, new ItemStack(Material.STRING)
+                }
+        ).register(plugin);
+
+        plugin.getLogger().info("§a[SourceFUN] Itens configurados com sucesso!");
+    }
 }
