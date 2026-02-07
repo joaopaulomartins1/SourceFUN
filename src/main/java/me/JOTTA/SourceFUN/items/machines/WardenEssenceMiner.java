@@ -24,6 +24,7 @@ public class WardenEssenceMiner extends SlimefunItem implements EnergyNetCompone
 
     private static final int STATUS_SLOT = 4;
     private static final int[] OUTPUT_SLOTS = { 29, 30, 31, 32, 33, 38, 39, 40, 41, 42 };
+
     private final int energyConsumption = 4096;
     private final int capacity = 8024;
 
@@ -35,7 +36,8 @@ public class WardenEssenceMiner extends SlimefunItem implements EnergyNetCompone
             public void init() {
                 int[] background = {0,1,2,3,5,6,7,8,9,10,11,12,13,14,15,16,17,18,26,27,35,36,44,45,53};
                 for (int i : background) {
-                    addItem(i, ChestMenuUtils.getBackground(), ChestMenuUtils.getEmptyClickHandler());
+                    addItem(i, ChestMenuUtils.getBackground());
+                    addMenuClickHandler(i, (p, slot, stack, action) -> false);
                 }
             }
 
@@ -70,15 +72,27 @@ public class WardenEssenceMiner extends SlimefunItem implements EnergyNetCompone
         BlockMenu inv = BlockStorage.getInventory(b);
         if (inv == null) return;
 
-        // Energia (Consumo atualizado para 4096 J/t)
+        SlimefunItem essence = SlimefunItem.getById("WARDEN_ESSENCE");
+        if (essence == null) return;
+
+
+        if (!inv.fits(essence.getItem(), OUTPUT_SLOTS)) {
+            inv.replaceExistingItem(STATUS_SLOT, new CustomItemStack(Material.ORANGE_STAINED_GLASS_PANE, "&6Inventário Cheio!", "&7A máquina parou."));
+            inv.addMenuClickHandler(STATUS_SLOT, (p, slot, stack, action) -> false);
+            return;
+        }
+
+
         int charge = getCharge(b.getLocation(), data);
         if (charge < energyConsumption) {
             inv.replaceExistingItem(STATUS_SLOT, new CustomItemStack(Material.RED_STAINED_GLASS_PANE, "&cEnergia Insuficiente!", "&7Precisa de: &e" + energyConsumption + " J"));
+            inv.addMenuClickHandler(STATUS_SLOT, (p, slot, stack, action) -> false);
             return;
         }
+
         removeCharge(b.getLocation(), energyConsumption);
 
-        // Progresso
+        // 3. Progresso
         int progress = 0;
         try {
             String saved = data.getString("progress");
@@ -86,16 +100,21 @@ public class WardenEssenceMiner extends SlimefunItem implements EnergyNetCompone
         } catch (Exception e) {}
 
         if (progress >= 30) {
-            SlimefunItem essence = SlimefunItem.getById("WARDEN_ESSENCE");
-            if (essence != null && inv.fits(essence.getItem(), OUTPUT_SLOTS)) {
-                inv.pushItem(essence.getItem().clone(), OUTPUT_SLOTS);
-                progress = 0;
-            }
+            inv.pushItem(essence.getItem().clone(), OUTPUT_SLOTS);
+            progress = 0;
         } else {
             progress++;
         }
 
-        inv.replaceExistingItem(STATUS_SLOT, new CustomItemStack(Material.LIME_STAINED_GLASS_PANE, "&aMinerando...", "&7Progresso: " + progress + "/30", "&7Energia: &e" + energyConsumption + " J/t"));
+
+        inv.replaceExistingItem(STATUS_SLOT, new CustomItemStack(Material.LIME_STAINED_GLASS_PANE,
+                "&aMinerando...",
+                "&7Progresso: &f" + progress + "/30",
+                "&7Energia: &e" + energyConsumption + " J/t"));
+
+
+        inv.addMenuClickHandler(STATUS_SLOT, (p, slot, stack, action) -> false);
+
         BlockStorage.addBlockInfo(b, "progress", String.valueOf(progress));
     }
 
@@ -107,6 +126,6 @@ public class WardenEssenceMiner extends SlimefunItem implements EnergyNetCompone
 
     @Override
     public int getCapacity() {
-        return capacity; // Buffer de 8024 J
+        return capacity;
     }
 }

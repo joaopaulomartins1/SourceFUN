@@ -25,7 +25,7 @@ import javax.annotation.Nullable;
 
 public class AdvancedPusher extends NetworkDirectional {
 
-    // Slots de fundo (vidros) baseados no seu print
+
     private static final int[] BACKGROUND_SLOTS = new int[]{
             0, 1, 2, 3, 4, 5, 6, 7, 8,
             9, 13, 14, 15, 16, 17,
@@ -34,14 +34,13 @@ public class AdvancedPusher extends NetworkDirectional {
             36, 37, 38, 39, 40, 41, 42, 43, 44
     };
 
-    // Os 9 slots de entrada (3x3 no centro-esquerda) conforme seu print
     private static final int[] ITEM_SLOTS = new int[]{
             10, 11, 12,
             19, 20, 21,
             28, 29, 30
     };
 
-    // Slots de controle de direção (remanejados para não sobrepor o 3x3)
+
     private static final int NORTH_SLOT = 7;
     private static final int SOUTH_SLOT = 25;
     private static final int EAST_SLOT = 17;
@@ -51,7 +50,6 @@ public class AdvancedPusher extends NetworkDirectional {
 
     public AdvancedPusher(ItemGroup itemGroup, SlimefunItemStack item, RecipeType recipeType, ItemStack[] recipe) {
         super(itemGroup, item, recipeType, recipe, NodeType.PUSHER);
-        // Garante que os 9 slots dropem itens ao quebrar a máquina
         for (int slot : ITEM_SLOTS) {
             this.getSlotsToDrop().add(slot);
         }
@@ -79,7 +77,7 @@ public class AdvancedPusher extends NetworkDirectional {
             return;
         }
 
-        // Itera pelos 9 slots de entrada configurados
+
         for (int itemSlot : this.getItemSlots()) {
             final ItemStack testItem = blockMenu.getItemInSlot(itemSlot);
 
@@ -128,7 +126,6 @@ public class AdvancedPusher extends NetworkDirectional {
         return BACKGROUND_SLOTS;
     }
 
-    // Métodos de direção obrigatórios da classe pai
     @Override public int getNorthSlot() { return NORTH_SLOT; }
     @Override public int getSouthSlot() { return SOUTH_SLOT; }
     @Override public int getEastSlot() { return EAST_SLOT; }
@@ -138,6 +135,6 @@ public class AdvancedPusher extends NetworkDirectional {
 
     @Override
     protected Particle.DustOptions getDustOptions() {
-        return new Particle.DustOptions(Color.fromRGB(255, 165, 0), 1); // Laranja para destacar
+        return new Particle.DustOptions(Color.fromRGB(255, 165, 0), 1);
     }
 }
