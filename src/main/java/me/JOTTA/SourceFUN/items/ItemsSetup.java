@@ -6,6 +6,7 @@ import io.github.thebusybiscuit.slimefun4.api.recipes.RecipeType;
 import me.JOTTA.SourceFUN.SourceFUN;
 import me.JOTTA.SourceFUN.items.groups.SourceFUNItemGroups;
 import me.JOTTA.SourceFUN.items.machines.AdvancedPusher;
+import me.JOTTA.SourceFUN.items.machines.NetworkGrabber;
 import me.JOTTA.SourceFUN.items.machines.WardenEssenceMiner;
 import me.JOTTA.SourceFUN.items.machines.Wardenassembly;
 import org.bukkit.Material;
@@ -192,6 +193,17 @@ public class ItemsSetup {
                 }
         ).register(plugin);
 
+        new NetworkGrabber(
+                SourceFUNItemGroups.MACHINES,
+                new SlimefunItemStack("SOURCE_PUSHER", Material.YELLOW_STAINED_GLASS, "§6Network Grabber", "", "§7Tira itens dos slots input das máquinas e coloca no sistema"),
+                RecipeType.ENHANCED_CRAFTING_TABLE,
+                new ItemStack[] {
+                        new ItemStack(Material.BARRIER), new ItemStack(Material.GOLD_INGOT), new ItemStack(Material.PISTON),
+                        new ItemStack(Material.GOLD_INGOT), new ItemStack(Material.REDSTONE_BLOCK), new ItemStack(Material.GOLD_INGOT),
+                        new ItemStack(Material.PISTON), new ItemStack(Material.GOLD_INGOT), new ItemStack(Material.PISTON)
+                }
+        ).register(plugin);
+    // NTW_GRABBER - 108x (0.55ms | avg: 0.01ms)
 
 
 
