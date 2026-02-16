@@ -22,11 +22,18 @@ import javax.annotation.Nullable;
 
 public class NetworkGrabber extends NetworkDirectional {
 
-    /** Quantos ticks esperar entre execuções (20 ticks = 1s) */
-    private static final int TICK_DELAY = 4; // 5x por segundo
-    private int ticker = 0;
+    /** Delay entre execuções (20 ticks = 1s) */
+    private static final int TICK_DELAY = 4;
 
-    public NetworkGrabber(ItemGroup itemGroup, SlimefunItemStack item, RecipeType recipeType, ItemStack[] recipe) {
+    /** Chave persistente por bloco */
+    private static final String KEY_TICK = "grabber-tick";
+
+    public NetworkGrabber(
+            ItemGroup itemGroup,
+            SlimefunItemStack item,
+            RecipeType recipeType,
+            ItemStack[] recipe
+    ) {
         super(itemGroup, item, recipeType, recipe, NodeType.GRABBER);
     }
 
@@ -38,8 +45,24 @@ public class NetworkGrabber extends NetworkDirectional {
             return;
         }
 
-        // 🔹 Throttle simples e eficiente
-        if (++ticker % TICK_DELAY != 0) {
+        // 🔹 Ticker por BLOCO (não global)
+        int tick = 0;
+        String raw = BlockStorage.getLocationInfo(blockMenu.getLocation(), KEY_TICK);
+        if (raw != null) {
+            try {
+                tick = Integer.parseInt(raw);
+            } catch (NumberFormatException ignored) {}
+        }
+
+        tick++;
+
+        BlockStorage.addBlockInfo(
+                blockMenu.getLocation(),
+                KEY_TICK,
+                Integer.toString(tick)
+        );
+
+        if (tick % TICK_DELAY != 0) {
             return;
         }
 
@@ -47,7 +70,7 @@ public class NetworkGrabber extends NetworkDirectional {
     }
 
     private void tryGrabItem(@Nonnull BlockMenu blockMenu) {
-        // 🔹 Lookup único
+
         final NodeDefinition definition =
                 NetworkStorage.getAllNetworkObjects().get(blockMenu.getLocation());
 
@@ -63,9 +86,14 @@ public class NetworkGrabber extends NetworkDirectional {
             return;
         }
 
-        // 🔹 Pega slots uma única vez
         final int[] slots = targetMenu.getPreset()
-                .getSlotsAccessedByItemTransport(targetMenu, ItemTransportFlow.WITHDRAW, null);
+                .getSlotsAccessedByItemTransport(
+                        targetMenu,
+                        ItemTransportFlow.WITHDRAW,
+                        null
+                );
+
+        final var root = definition.getNode().getRoot();
 
         for (int slot : slots) {
             final ItemStack itemStack = targetMenu.getItemInSlot(slot);
@@ -76,15 +104,14 @@ public class NetworkGrabber extends NetworkDirectional {
 
             final int before = itemStack.getAmount();
 
-            // 🔹 Chamada cara só quando realmente há item
-            definition.getNode().getRoot().addItemStack(itemStack);
+            //  Transfere para a network
+            root.addItemStack(itemStack);
 
-            if (definition.getNode().getRoot().isDisplayParticles()
-                    && itemStack.getAmount() < before) {
+            if (root.isDisplayParticles() && itemStack.getAmount() < before) {
                 showParticle(blockMenu.getLocation(), direction);
             }
 
-            // 🔹 Limite: 1 transferência por execução
+            //  Limite rígido: 1 item por execução
             return;
         }
     }

@@ -10,6 +10,7 @@ public class SourceFUNItemGroups {
     public static DummyItemGroup MACHINES;
     public static DummyItemGroup RESOURCES;
     public static DummyItemGroup TOOLS;
+    public static DummyItemGroup BOSSES;
 
     public static void setup(SourceFUN plugin) {
         MAIN = new MainFlexGroup(
@@ -30,6 +31,10 @@ public class SourceFUNItemGroups {
         TOOLS = new DummyItemGroup(
                 new NamespacedKey(plugin, "sf_tools"),
                 new CustomItemStack(Material.DIAMOND_AXE,"§x§5§4§D§A§F§4F§x§5§4§D§3§F§1e§x§5§4§C§C§E§Er§x§5§4§C§5§E§Ar§x§5§4§B§E§E§7a§x§5§4§B§7§E§3m§x§5§4§A§F§E§0e§x§5§4§A§8§D§Cn§x§5§4§A§1§D§9t§x§5§4§9§A§D§5a§x§5§4§9§3§D§2s")
+        );
+        BOSSES = new DummyItemGroup(
+                new NamespacedKey(plugin, "sf_bosses"),
+                new CustomItemStack(Material.BLACK_CANDLE,"§x§3§B§0§4§0§4B§x§3§E§0§D§3§Bo§x§4§0§1§7§7§2s§x§4§3§2§0§A§9s§x§2§D§1§D§B§1e§x§1§6§1§A§B§8s")
         );
         MAIN.register(plugin);
     }
