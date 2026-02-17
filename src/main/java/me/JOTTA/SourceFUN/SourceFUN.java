@@ -1,10 +1,10 @@
 package me.JOTTA.SourceFUN;
 
 import me.JOTTA.SourceFUN.items.ItemsSetup;
+import me.JOTTA.SourceFUN.items.bosses.WardenBoss;
 import me.JOTTA.SourceFUN.items.groups.SourceFUNItemGroups;
 import me.JOTTA.SourceFUN.items.literners.WardenDropListener;
 import org.bukkit.plugin.java.JavaPlugin;
-
 import io.github.thebusybiscuit.slimefun4.api.SlimefunAddon;
 
 public class SourceFUN extends JavaPlugin implements SlimefunAddon {
@@ -14,48 +14,27 @@ public class SourceFUN extends JavaPlugin implements SlimefunAddon {
     @Override
     public void onEnable() {
         instance = this;
-        getLogger().info("§a[SourceFUN] Iniciando...");
 
         try {
-
+            // 1. Grupos de Itens
             SourceFUNItemGroups.setup(this);
 
-
+            // 2. Setup de Itens (Define os itens na memória)
             ItemsSetup.setup(this);
+
+            // 3. Registro dos Listeners (Eventos)
+            getServer().getPluginManager().registerEvents(new WardenBoss(), this);
             getServer().getPluginManager().registerEvents(new WardenDropListener(), this);
 
-            getLogger().info("""
-                    *******************************
-                    -------------------------------
-                    SOURCEFUN
-                    -------------------------------
-                    *******************************""");
-
-
+            getLogger().info("§a[SourceFUN] Plugin habilitado com sucesso!");
 
         } catch (Exception e) {
-            getLogger().severe("§c[SourceFUN] Erro: " + e.getMessage());
+            getLogger().severe("§c[SourceFUN] Erro no carregamento: " + e.getMessage());
             e.printStackTrace();
         }
     }
 
-    @Override
-    public void onDisable() {
-        getLogger().info("§c[SourceFUN] Desativado.");
-    }
-
-    // IMPORTANTE: Só retorna instance DEPOIS de onEnable()
-    public static SourceFUN getInstance() {
-        return instance;  // Pode ser null se chamado ANTES de onEnable()
-    }
-
-    @Override
-    public JavaPlugin getJavaPlugin() {
-        return this;
-    }
-
-    @Override
-    public String getBugTrackerURL() {
-        return null;
-    }
+    public static SourceFUN getInstance() { return instance; }
+    @Override public JavaPlugin getJavaPlugin() { return this; }
+    @Override public String getBugTrackerURL() { return null; }
 }

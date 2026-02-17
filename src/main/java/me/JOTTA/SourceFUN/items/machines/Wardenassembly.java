@@ -57,22 +57,22 @@ public class Wardenassembly extends AbstractEntityAssembler<Warden> {
     @Override
     protected void constructMenu(BlockMenuPreset preset) {
         preset.addItem(1, new CustomItemStack(getHead(),
-                        "&5Sculk Catalyst Slot",
+                        "&5SReinforced deepslate slot",
                         "",
-                        "&fThis Slot accepts Sculk Catalysts"),
+                        "&fEsse slot aceita apenas Reinforced deepslate"),
                 ChestMenuUtils.getEmptyClickHandler());
 
         preset.addItem(7, new CustomItemStack(getBody(),
-                        "&5Sculk Block Slot",
+                        "&5Nether Star Slot",
                         "",
-                        "&fThis Slot accepts Sculk Blocks"),
+                        "&fEsse Slot aceita apenas Nether Star"),
                 ChestMenuUtils.getEmptyClickHandler());
 
         preset.addItem(13, new CustomItemStack(Material.CLOCK,
-                        "&7Cooldown: &b60 Seconds",
+                        "&7Cooldown: &b60 Segundos",
                         "",
-                        "&fThis Machine takes 1 Minute to assemble a Warden!",
-                        "&cBe careful, it's dangerous!"),
+                        "&fEssa máquina leva 60 segundos para spawnar o Warden!",
+                        "&cCuidado! Ele morde, rs"),
                 ChestMenuUtils.getEmptyClickHandler());
     }
 
@@ -91,7 +91,7 @@ public class Wardenassembly extends AbstractEntityAssembler<Warden> {
         org.bukkit.Bukkit.getScheduler().runTaskLater(
                 io.github.thebusybiscuit.slimefun4.implementation.Slimefun.instance(),
                 () -> warden.setInvulnerable(false),
-                60L // 3 segundos (20 ticks = 1 segundo)
+                60L // 3 segundos
         );
 
         return warden;

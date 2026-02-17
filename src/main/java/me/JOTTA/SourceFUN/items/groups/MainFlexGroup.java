@@ -57,6 +57,13 @@ public class MainFlexGroup extends FlexItemGroup {
             }
             return false;
         });
+        menu.addItem(22, new CustomItemStack(Material.BLACK_CANDLE, "§x§3§B§0§4§0§4B§x§3§E§0§D§3§Bo§x§4§0§1§7§7§2s§x§4§3§2§0§A§9s§x§2§D§1§D§B§1e§x§1§6§1§A§B§8s"), (p, slot, item, action) -> {
+            if (SourceFUNItemGroups.BOSSES != null) {
+                profile.getGuideHistory().add(this, 1);
+                SlimefunGuide.openItemGroup(profile, SourceFUNItemGroups.BOSSES, mode, 1);
+            }
+            return false;
+        });
 
         // Slot 52 - DISCORD
         menu.addItem(52, new CustomItemStack(Material.BOOK, "§x§2§5§0§0§A§CDiscord", "§x§3§3§3§2§3§7Clique aqui para acessar nosso discord"), (p, slot, item, action) -> {
