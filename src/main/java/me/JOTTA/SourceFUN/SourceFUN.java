@@ -1,6 +1,6 @@
 package me.JOTTA.SourceFUN;
 
-import me.JOTTA.SourceFUN.items.ItemsSetup;
+import me.JOTTA.SourceFUN.items.ItensSetup.ItemsSetup;
 import me.JOTTA.SourceFUN.items.bosses.WardenBoss;
 import me.JOTTA.SourceFUN.items.groups.SourceFUNItemGroups;
 import me.JOTTA.SourceFUN.items.literners.WardenDropListener;
@@ -16,10 +16,9 @@ public class SourceFUN extends JavaPlugin implements SlimefunAddon {
         instance = this;
 
         try {
-            // 1. Grupos de Itens
             SourceFUNItemGroups.setup(this);
 
-            // 2. Setup de Itens (Define os itens na memória)
+
             ItemsSetup.setup(this);
 
             // 3. Registro dos Listeners (Eventos)
