@@ -28,10 +28,12 @@ public class WardenBoss implements Listener {
 
     public static final HashMap<UUID, Double> liveBosses = new HashMap<>();
     private static final HashMap<UUID, BossBar> bossBars = new HashMap<>();
+
+    // Variáveis globais garantidas para não dar erro de "Cannot find symbol"
     private static final double MAX_REAL_HEALTH = 70000.0;
+    private static final double VANILLA_BASE_HEALTH = 2000.0;
 
     public static void spawn(@Nonnull SourceFUN plugin, @Nonnull Location loc) {
-        // 1. Chunk Loader Ambulante para evitar bug de imortalidade
         Chunk chunk = loc.getChunk();
         chunk.setForceLoaded(true);
 
@@ -42,15 +44,15 @@ public class WardenBoss implements Listener {
         boss.setCustomName("§d§lCorrupted Warden");
         boss.setCustomNameVisible(true);
 
-        // Vida base para o motor do Minecraft
-        boss.getAttribute(Attribute.GENERIC_MAX_HEALTH).setBaseValue(2000.0);
-        boss.setHealth(2000.0);
+        boss.getAttribute(Attribute.GENERIC_MAX_HEALTH).setBaseValue(VANILLA_BASE_HEALTH);
+        boss.setHealth(VANILLA_BASE_HEALTH);
 
         UUID id = boss.getUniqueId();
         liveBosses.put(id, MAX_REAL_HEALTH);
 
         BossBar bossBar = Bukkit.createBossBar("§5§lRitual de Invocação", BarColor.PURPLE, BarStyle.SEGMENTED_20);
         bossBars.put(id, bossBar);
+
         loc.getWorld().getNearbyEntities(loc, 50, 50, 50).forEach(e -> {
             if (e instanceof Player) bossBar.addPlayer((Player) e);
         });
@@ -60,7 +62,6 @@ public class WardenBoss implements Listener {
             @Override
             public void run() {
                 if (boss == null || !boss.isValid()) {
-                    // Se o boss sumir antes do tempo, limpa o chunk loader
                     chunk.setForceLoaded(false);
                     cleanup(id);
                     this.cancel();
@@ -88,7 +89,6 @@ public class WardenBoss implements Listener {
                 }
 
                 if (timer == 500) {
-                    // Ritual acabou: desativa chunk loader e libera o boss
                     chunk.setForceLoaded(false);
                     Objects.requireNonNull(boss.getAttribute(Attribute.GENERIC_ATTACK_DAMAGE)).setBaseValue(250.0);
                     Objects.requireNonNull(boss.getAttribute(Attribute.GENERIC_MOVEMENT_SPEED)).setBaseValue(0.45);
@@ -100,9 +100,37 @@ public class WardenBoss implements Listener {
                     updateBossBar(id, MAX_REAL_HEALTH);
                     bossBar.setColor(BarColor.PINK);
                     this.cancel();
+
+                    startBossBarRadar(plugin, boss, id, bossBar);
                 }
             }
         }.runTaskTimer(plugin, 0L, 1L);
+    }
+
+    private static void startBossBarRadar(SourceFUN plugin, Warden boss, UUID id, BossBar bossBar) {
+        new BukkitRunnable() {
+            @Override
+            public void run() {
+                if (!boss.isValid() || !liveBosses.containsKey(id)) {
+                    this.cancel();
+                    return;
+                }
+
+                Location bossLoc = boss.getLocation();
+                for (Player p : Bukkit.getOnlinePlayers()) {
+                    if (p.getWorld().equals(bossLoc.getWorld())) {
+                        double distanceSquared = p.getLocation().distanceSquared(bossLoc);
+                        if (distanceSquared <= 2500) {
+                            if (!bossBar.getPlayers().contains(p)) bossBar.addPlayer(p);
+                        } else {
+                            if (bossBar.getPlayers().contains(p)) bossBar.removePlayer(p);
+                        }
+                    } else if (bossBar.getPlayers().contains(p)) {
+                        bossBar.removePlayer(p);
+                    }
+                }
+            }
+        }.runTaskTimer(plugin, 0L, 10L);
     }
 
     @EventHandler(priority = EventPriority.HIGHEST, ignoreCancelled = true)
@@ -115,17 +143,22 @@ public class WardenBoss implements Listener {
             double currentHP = liveBosses.get(id);
             double newHP = currentHP - damage;
 
-            // Cancela dano real para manter os 70k
-            e.setDamage(0);
-
             if (newHP <= 0) {
+                // Mantemos o id na lista com vida a zero para o onDeath ser executado!
                 liveBosses.put(id, 0.0);
                 updateBossBar(id, 0);
-                ((Warden) e.getEntity()).setHealth(0); // Dispara o EntityDeathEvent
+
+                e.setCancelled(true);
+                ((Warden) e.getEntity()).setHealth(0.0); // Força a morte instantânea do Minecraft
             } else {
                 liveBosses.put(id, newHP);
                 updateBossBar(id, newHP);
-                e.getEntity().playEffect(EntityEffect.HURT);
+
+                double percentage = newHP / MAX_REAL_HEALTH;
+                double syncHP = Math.max(1.0, VANILLA_BASE_HEALTH * percentage);
+
+                ((Warden) e.getEntity()).setHealth(syncHP);
+                e.setDamage(0.001);
             }
         }
     }
@@ -137,34 +170,15 @@ public class WardenBoss implements Listener {
             Location l = e.getEntity().getLocation();
             l.getWorld().playSound(l, Sound.ENTITY_WITHER_DEATH, 3f, 0.5f);
 
-            // IMPORTANTE: Cleanup atrasado em 1 tick para permitir que
-            // outros Listeners (Drops) reconheçam o ID do Boss antes dele sumir.
+            // Se for preciso adicionar drops customizados ou espalhar itens do Slimefun,
+            // é exatamente aqui que colocamos a lógica.
+
             new BukkitRunnable() {
                 @Override
                 public void run() {
                     cleanup(id);
                 }
             }.runTaskLater(SourceFUN.getInstance(), 1L);
-        }
-    }
-
-    @EventHandler
-    public void onPlayerMove(org.bukkit.event.player.PlayerMoveEvent e) {
-        Player player = e.getPlayer();
-        for (UUID id : liveBosses.keySet()) {
-            Entity entity = Bukkit.getEntity(id);
-            if (entity != null && entity.getWorld().equals(player.getWorld())) {
-                double distance = entity.getLocation().distance(player.getLocation());
-                BossBar bar = bossBars.get(id);
-
-                if (bar != null) {
-                    if (distance <= 50.0 && !bar.getPlayers().contains(player)) {
-                        bar.addPlayer(player);
-                    } else if (distance > 60.0 && bar.getPlayers().contains(player)) {
-                        bar.removePlayer(player);
-                    }
-                }
-            }
         }
     }
 
@@ -188,6 +202,7 @@ public class WardenBoss implements Listener {
     public void onChunkUnload(ChunkUnloadEvent event) {
         for (Entity entity : event.getChunk().getEntities()) {
             if (entity instanceof Warden && entity.getCustomName() != null && entity.getCustomName().contains("Corrupted Warden")) {
+                cleanup(entity.getUniqueId());
                 entity.remove();
             }
         }
