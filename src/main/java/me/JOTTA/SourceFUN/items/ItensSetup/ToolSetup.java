@@ -1,10 +1,9 @@
-package me.JOTTA.SourceFUN.items.setup;
+package me.JOTTA.SourceFUN.items.ItensSetup;
 
 import io.github.thebusybiscuit.slimefun4.api.items.SlimefunItem;
 import io.github.thebusybiscuit.slimefun4.api.items.SlimefunItemStack;
 import io.github.thebusybiscuit.slimefun4.api.recipes.RecipeType;
 import me.JOTTA.SourceFUN.SourceFUN;
-import me.JOTTA.SourceFUN.items.ItensSetup.ResourceSetup;
 import me.JOTTA.SourceFUN.items.groups.SourceFUNItemGroups;
 import org.bukkit.Material;
 import org.bukkit.enchantments.Enchantment;

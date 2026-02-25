@@ -12,7 +12,7 @@ import org.bukkit.inventory.ItemStack;
 
 public class BossSetup {
 
-    public static SlimefunItemStack wardenHeartInfected;
+
 
     public static void setup(SourceFUN plugin) {
         // Item de Invocação
@@ -27,10 +27,5 @@ public class BossSetup {
             e.getPlayer().sendMessage("§5§lO ritual começou...");
         });
         summonerItem.register(plugin);
-
-        // Drop Especial (Mob Drop)
-        wardenHeartInfected = new SlimefunItemStack("SOURCE_WARDEN_HEART_INFECTED", Material.ENDER_EYE, "§x§0§0§5§3§1§DInfected Warden Heart", "", "§7O núcleo infestado de uma abominação");
-        new SlimefunItem(SourceFUNItemGroups.RESOURCES, wardenHeartInfected, RecipeType.MOB_DROP,
-                new ItemStack[] { null, null, null, null, new CustomItemStack(Material.WARDEN_SPAWN_EGG, "§d§lCorrupted Warden"), null, null, null, null }).register(plugin);
     }
 }
