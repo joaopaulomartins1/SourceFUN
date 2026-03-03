@@ -126,6 +126,77 @@ public class MachineSetup {
         StonecutterRecipes.registerAll(stonecutter);
         stonecutter.register(plugin);
 
+
+
+        GenericMachine stoneCompressor = new GenericMachine(
+                SourceFUNItemGroups.MACHINES,
+                new SlimefunItemStack("SOURCE_COBBLE_PRESS_ADVANCED", Material.SMOOTH_STONE, "§x§F§F§2§C§3§DAdvanced §x§8§C§8§C§8§CCobble Press", "", "&7Comprime pedras automaticamente"),
+                RecipeType.ENHANCED_CRAFTING_TABLE,
+                new ItemStack[] {
+                        new ItemStack(Material.BARRIER), new ItemStack(Material.BARRIER), new ItemStack(Material.BARRIER),
+                        new ItemStack(Material.BARRIER), new ItemStack(Material.BARRIER), new ItemStack(Material.BARRIER),
+                        new ItemStack(Material.BARRIER), new ItemStack(Material.BARRIER), new ItemStack(Material.BARRIER)
+                },
+                1748, // Energia (consumo)
+                2048, // Capacidade
+                1    // Velocidade
+        );
+
+// 1. Registro da primeira etapa (64 Cobblestone comum -> 8 Nível 1)
+        SlimefunItem st1 = SlimefunItem.getById("IE_COMPRESSED_COBBLESTONE_1");
+        if (st1 != null) {
+            stoneCompressor.addRecipe(1,
+                    new ItemStack(Material.COBBLESTONE, 64),
+                    new CustomItemStack(st1.getItem(), 12)
+            );
+        }
+
+// 2. Loop para os níveis seguintes (64 do anterior -> 8 do próximo)
+// Vai do 1 até o 4, cobrindo as transições (1->2, 2->3, 3->4, 4->5)
+        for (int i = 1; i <= 4; i++) {
+            SlimefunItem atual = SlimefunItem.getById("IE_COMPRESSED_COBBLESTONE_" + i);
+            SlimefunItem proximo = SlimefunItem.getById("IE_COMPRESSED_COBBLESTONE_" + (i + 1));
+
+            if (atual != null && proximo != null) {
+                stoneCompressor.addRecipe(1,
+                        new CustomItemStack(atual.getItem(), 64),
+                        new CustomItemStack(proximo.getItem(), 8)
+                );
+            }
+        }
+
+        stoneCompressor.register(plugin);
+
+
+
+
+        SlimefunItemStack energyConnectorItem = new SlimefunItemStack(
+                "SOURCE_ENERGY_CONNECTOR",
+                Material.GREEN_WOOL,
+                "&6Conector de Energia",
+                "",
+                "&7§x§8§3§8§3§8§3Range: §x§F§A§0§0§0§06 §x§F§1§F§F§0§0blocks",
+                ""
+        );
+
+
+        ItemStack[] recipe = {
+                new ItemStack(Material.IRON_INGOT), new ItemStack(Material.COPPER_INGOT), new ItemStack(Material.IRON_INGOT),
+                new ItemStack(Material.COPPER_INGOT),new ItemStack(Material.COPPER_INGOT) , new ItemStack(Material.COPPER_INGOT),
+                new ItemStack(Material.IRON_INGOT), new ItemStack(Material.COPPER_INGOT), new ItemStack(Material.IRON_INGOT)
+        };
+
+
+        EnergyConnector energyConnector = new EnergyConnector(
+                SourceFUNItemGroups.MACHINES,
+                energyConnectorItem,
+                RecipeType.ENHANCED_CRAFTING_TABLE,
+                recipe,
+                new ItemStack(Material.AIR) // Saída extra da receita (opcional)
+        );
+
+        energyConnector.register(plugin); // "this" refere-se à sua classe JavaPlugin/SlimefunAddon
+
     }
 
 

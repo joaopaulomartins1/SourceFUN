@@ -8,6 +8,7 @@ import me.JOTTA.SourceFUN.SourceFUN;
 import me.JOTTA.SourceFUN.items.groups.SourceFUNItemGroups;
 import org.bukkit.Material;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.potion.PotionEffectType;
 
 
 public class ResourceSetup {
@@ -25,6 +26,7 @@ public class ResourceSetup {
     public static SlimefunItemStack wardenHeart;
     public static SlimefunItemStack completstar;
     public static SlimefunItemStack wardenHeartInfected;
+    public static SlimefunItemStack cudogui;
 
     public static void setup(SourceFUN plugin) {
         // --- Warden Essence ---
@@ -102,6 +104,65 @@ public class ResourceSetup {
                 completstar,
                 RecipeType.ENHANCED_CRAFTING_TABLE,
                 new ItemStack[9]).register(plugin);
+
+      
+        SlimefunItemStack cudogui = new SlimefunItemStack(
+                "ANELDOGUI",
+                Material.GOLD_NUGGET,
+                "§x§B§1§0§0§0§0A§x§A§E§2§3§3§3n§x§A§C§4§6§6§6e§x§A§9§6§8§9§9l §x§A§4§A§E§F§Fd§x§9§D§8§C§E§2o §x§8§E§4§9§A§8G§x§8§7§2§8§8§BU§x§8§0§0§6§6§EI§x§9§9§1§3§7§8S§x§B§2§2§0§8§2E§x§C§B§2§D§8§CN§x§E§4§3§A§9§6P§x§D§3§4§B§9§9A§x§C§2§5§C§9§BI§x§B§1§6§C§9§EI§x§A§0§7§D§A§02§x§8§F§8§E§A§32",
+                "§x§B§7§0§B§6§CE§x§A§9§2§4§8§2s§x§9§B§3§D§9§9s§x§8§D§5§5§A§Fe §x§6§D§7§D§B§9a§x§5§B§8§C§A§Cn§x§4§8§9§A§A§0e§x§3§6§A§9§9§3l §x§4§E§C§7§9§5é §x§A§3§E§6§B§0u§x§C§D§F§5§B§Dm§x§A§D§D§D§9§9a §x§6§C§A§C§5§2d§x§4§C§9§3§2§Fe§x§2§C§7§B§0§Bl§x§3§4§6§7§3§9i§x§3§D§5§4§6§6c§x§4§5§4§0§9§4i§x§4§D§2§C§C§1a",
+                "§x§1§3§6§F§F§FSaturação",
+                "§x§1§3§6§F§F§FForça III",
+                "§x§1§3§6§F§F§FRegeneração II"
+        );
+
+// 2. Criar e Registrar a instância (Limpa, sem handlers)
+        new SlimefunItem(SourceFUNItemGroups.RESOURCES,
+                cudogui,
+                RecipeType.ENHANCED_CRAFTING_TABLE,
+                new ItemStack[] {
+                        new ItemStack(Material.BARRIER), new ItemStack(Material.BARRIER), new ItemStack(Material.BARRIER),
+                        new ItemStack(Material.BARRIER), new ItemStack(Material.BARRIER), new ItemStack(Material.BARRIER),
+                        new ItemStack(Material.BARRIER), new ItemStack(Material.BARRIER), new ItemStack(Material.BARRIER)
+                }).register(plugin);
+
+
+        org.bukkit.Bukkit.getScheduler().runTaskTimer(plugin, () -> {
+
+            // Passa por todos os jogadores online
+            for (org.bukkit.entity.Player p : org.bukkit.Bukkit.getOnlinePlayers()) {
+
+                // Checa todos os itens do inventário
+                for (ItemStack item : p.getInventory().getContents()) {
+                    if (item != null && item.getType() != Material.AIR) {
+
+                        // Converte o item físico para um SlimefunItem
+                        io.github.thebusybiscuit.slimefun4.api.items.SlimefunItem sfItem = io.github.thebusybiscuit.slimefun4.api.items.SlimefunItem.getByItem(item);
+
+                        // Se for do Slimefun e tiver o ID do seu Anel:
+                        if (sfItem != null && sfItem.getId().equals("ANELDOGUI")) {
+
+
+                            p.addPotionEffect(new org.bukkit.potion.PotionEffect(org.bukkit.potion.PotionEffectType.SATURATION, 40, 0, true, false));
+                            p.addPotionEffect(new org.bukkit.potion.PotionEffect(PotionEffectType.REGENERATION, 40, 2, true, false));
+                            p.addPotionEffect(new org.bukkit.potion.PotionEffect(org.bukkit.potion.PotionEffectType.INCREASE_DAMAGE, 60, 2, true, false));
+
+
+
+                            break;
+                        }
+                    }
+                }
+            }
+        }, 0L, 20L); //
+
+
+
+
+
+
+
+
 
         
     }
