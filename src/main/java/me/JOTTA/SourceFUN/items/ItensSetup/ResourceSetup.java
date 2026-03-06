@@ -26,7 +26,7 @@ public class ResourceSetup {
     public static SlimefunItemStack wardenHeart;
     public static SlimefunItemStack completstar;
     public static SlimefunItemStack wardenHeartInfected;
-    public static SlimefunItemStack cudogui;
+
 
     public static void setup(SourceFUN plugin) {
         // --- Warden Essence ---
@@ -116,7 +116,7 @@ public class ResourceSetup {
                 "§x§1§3§6§F§F§FRegeneração II"
         );
 
-// 2. Criar e Registrar a instância (Limpa, sem handlers)
+
         new SlimefunItem(SourceFUNItemGroups.RESOURCES,
                 cudogui,
                 RecipeType.ENHANCED_CRAFTING_TABLE,
@@ -129,17 +129,15 @@ public class ResourceSetup {
 
         org.bukkit.Bukkit.getScheduler().runTaskTimer(plugin, () -> {
 
-            // Passa por todos os jogadores online
             for (org.bukkit.entity.Player p : org.bukkit.Bukkit.getOnlinePlayers()) {
 
-                // Checa todos os itens do inventário
                 for (ItemStack item : p.getInventory().getContents()) {
                     if (item != null && item.getType() != Material.AIR) {
 
-                        // Converte o item físico para um SlimefunItem
+
                         io.github.thebusybiscuit.slimefun4.api.items.SlimefunItem sfItem = io.github.thebusybiscuit.slimefun4.api.items.SlimefunItem.getByItem(item);
 
-                        // Se for do Slimefun e tiver o ID do seu Anel:
+
                         if (sfItem != null && sfItem.getId().equals("ANELDOGUI")) {
 
 

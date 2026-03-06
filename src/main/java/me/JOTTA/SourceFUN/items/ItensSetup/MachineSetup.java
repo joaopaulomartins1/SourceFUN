@@ -3,6 +3,7 @@ package me.JOTTA.SourceFUN.items.ItensSetup;
 import io.github.thebusybiscuit.slimefun4.api.items.SlimefunItem;
 import io.github.thebusybiscuit.slimefun4.api.items.SlimefunItemStack;
 import io.github.thebusybiscuit.slimefun4.api.recipes.RecipeType;
+import io.github.thebusybiscuit.slimefun4.implementation.SlimefunItems;
 import io.github.thebusybiscuit.slimefun4.libraries.dough.items.CustomItemStack;
 import me.JOTTA.SourceFUN.SourceFUN;
 import me.JOTTA.SourceFUN.items.ItensSetup.MachinesRecipes.StonecutterRecipes;
@@ -130,7 +131,8 @@ public class MachineSetup {
 
         GenericMachine stoneCompressor = new GenericMachine(
                 SourceFUNItemGroups.MACHINES,
-                new SlimefunItemStack("SOURCE_COBBLE_PRESS_ADVANCED", Material.SMOOTH_STONE, "§x§F§F§2§C§3§DAdvanced §x§8§C§8§C§8§CCobble Press", "", "&7Comprime pedras automaticamente"),
+                new SlimefunItemStack("SOURCE_COBBLE_PRESS_ADVANCED", Material.SMOOTH_STONE, "§x§F§F§2§C§3§DAdvanced §x§8§C§8§C§8§CCobble Press", "",
+                        "§x§9§2§0§0§0§0End-Game Machine", "§8⇨ §e⚡ §7Consumo: 1748 J/t", "§8⇨ §b❄ §7Capacidade: 2048 J"),
                 RecipeType.ENHANCED_CRAFTING_TABLE,
                 new ItemStack[] {
                         new ItemStack(Material.BARRIER), new ItemStack(Material.BARRIER), new ItemStack(Material.BARRIER),
@@ -147,7 +149,7 @@ public class MachineSetup {
         if (st1 != null) {
             stoneCompressor.addRecipe(1,
                     new ItemStack(Material.COBBLESTONE, 64),
-                    new CustomItemStack(st1.getItem(), 12)
+                    new CustomItemStack(st1.getItem(), 16)
             );
         }
 
@@ -166,6 +168,31 @@ public class MachineSetup {
         }
 
         stoneCompressor.register(plugin);
+        SlimefunItem titanium = SlimefunItem.getById("IE_TITANIUM");
+        GenericMachine sourcePress = new GenericMachine(
+                SourceFUNItemGroups.MACHINES,
+                new SlimefunItemStack("SOURCE_PRESS_ADVANCED", Material.PISTON,
+                        "§x§F§F§2§C§3§DAdvanced §x§8§C§8§C§8§CEletric Press",
+                        "", "§x§9§2§0§0§0§0End-Game Machine", "§8⇨ §e⚡ §7Consumo: 2058 J/t", "§8⇨ §b❄ §7Capacidade: 12564 J"),
+                RecipeType.ENHANCED_CRAFTING_TABLE,
+                new ItemStack[] {
+                        new ItemStack(Material.BARRIER), new ItemStack(Material.BARRIER), new ItemStack(Material.BARRIER),
+                        new ItemStack(Material.BARRIER), new ItemStack(Material.BARRIER), new ItemStack(Material.BARRIER),
+                        new ItemStack(Material.BARRIER), new ItemStack(Material.BARRIER), new ItemStack(Material.BARRIER)
+                },
+                2058, // Energia (consumo)
+                12564, // Capacidade
+                1    // Velocidade
+        );
+        sourcePress.addRecipe(4, SlimefunItems.REINFORCED_ALLOY_INGOT.asQuantity(64), SlimefunItems.REINFORCED_PLATE.asQuantity(8));
+        sourcePress.addRecipe(4, SlimefunItems.STEEL_INGOT.asQuantity(64), SlimefunItems.STEEL_PLATE.asQuantity(8));
+        sourcePress.addRecipe(4, ResourceSetup.maraging.asQuantity(64), ResourceSetup.maragingPlate.asQuantity(8));
+        sourcePress.addRecipe(4,new CustomItemStack(titanium.getItem(), 64) , ResourceSetup.titaniumPlate.asQuantity(8));
+        sourcePress.addRecipe(4, new ItemStack(Material.NETHER_WART, 32) , SlimefunItems.MAGIC_LUMP_1.asQuantity(64));
+        sourcePress.addRecipe(4, SlimefunItems.MAGIC_LUMP_1.asQuantity(64), SlimefunItems.MAGIC_LUMP_2.asQuantity(16));
+        sourcePress.addRecipe(4, SlimefunItems.MAGIC_LUMP_2.asQuantity(64), SlimefunItems.MAGIC_LUMP_3.asQuantity(16));
+
+        sourcePress.register(plugin);
 
 
 
@@ -181,7 +208,7 @@ public class MachineSetup {
 
 
         ItemStack[] recipe = {
-                new ItemStack(Material.IRON_INGOT), new ItemStack(Material.COPPER_INGOT), new ItemStack(Material.IRON_INGOT),
+                new ItemStack(Material.BARRIER), new ItemStack(Material.COPPER_INGOT), new ItemStack(Material.IRON_INGOT),
                 new ItemStack(Material.COPPER_INGOT),new ItemStack(Material.COPPER_INGOT) , new ItemStack(Material.COPPER_INGOT),
                 new ItemStack(Material.IRON_INGOT), new ItemStack(Material.COPPER_INGOT), new ItemStack(Material.IRON_INGOT)
         };
@@ -192,15 +219,15 @@ public class MachineSetup {
                 energyConnectorItem,
                 RecipeType.ENHANCED_CRAFTING_TABLE,
                 recipe,
-                new ItemStack(Material.AIR) // Saída extra da receita (opcional)
+                new ItemStack(Material.AIR)
         );
 
-        energyConnector.register(plugin); // "this" refere-se à sua classe JavaPlugin/SlimefunAddon
+        energyConnector.register(plugin);
 
     }
 
 
-    ;
+
 
 
     private static WardenQuarry addBasicLoot(WardenQuarry q, int amt) {

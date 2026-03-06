@@ -6,7 +6,6 @@ import io.github.thebusybiscuit.slimefun4.api.recipes.RecipeType;
 import me.JOTTA.SourceFUN.SourceFUN;
 import me.JOTTA.SourceFUN.items.Tools.QuebraTreco;
 import me.JOTTA.SourceFUN.items.groups.SourceFUNItemGroups;
-import me.JOTTA.SourceFUN.items.machines.AdvancedPusher;
 import org.bukkit.Material;
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.inventory.ItemFlag;
