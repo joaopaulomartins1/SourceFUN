@@ -9,9 +9,10 @@ import io.github.thebusybiscuit.slimefun4.core.handlers.ItemUseHandler;
 import io.github.thebusybiscuit.slimefun4.implementation.Slimefun;
 import io.github.thebusybiscuit.slimefun4.libraries.dough.protection.Interaction;
 import me.mrCookieSlime.Slimefun.api.BlockStorage;
+import org.bukkit.Bukkit;
 import org.bukkit.Material;
-import org.bukkit.block.Block;
 import org.bukkit.entity.Player;
+import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.plugin.Plugin;
 
@@ -20,20 +21,22 @@ import java.util.Set;
 
 public class QuebraTreco extends SlimefunItem {
 
-    // Lista de nomes de plugins (Addons) permitidos
     private final Set<String> addonsPermitidos = new HashSet<>();
 
     public QuebraTreco(ItemGroup itemGroup, SlimefunItemStack item, RecipeType recipeType, ItemStack[] recipe) {
         super(itemGroup, item, recipeType, recipe);
 
-        // Adiciona o nome do plugin (como está no plugin.yml dele)
         addonsPermitidos.add("Networks");
         addonsPermitidos.add("InfinityExpansion2");
         addonsPermitidos.add("Supreme");
-        // Podes adicionar o teu próprio addon também
         addonsPermitidos.add("SourceFUN");
         addonsPermitidos.add("Slimefun");
         addonsPermitidos.add("GeneticChickengineering");
+        addonsPermitidos.add("FluffyMachines");
+        addonsPermitidos.add("SlimeTinker");
+        addonsPermitidos.add("SimpleMaterialGenerators");
+        addonsPermitidos.add("FNAmplifications");
+        addonsPermitidos.add("FoxyMachines");
     }
 
     @Override
@@ -50,26 +53,29 @@ public class QuebraTreco extends SlimefunItem {
 
             if (sfItem == null) return;
 
-            // --- A MÁGICA ACONTECE AQUI ---
-            // Descobre qual plugin registou este item
             Plugin pluginDono = sfItem.getAddon().getJavaPlugin();
             String nomeDoAddon = pluginDono.getName();
 
             if (addonsPermitidos.contains(nomeDoAddon)) {
 
-                // Verifica proteções de terreno
                 if (!Slimefun.getProtectionManager().hasPermission(p, block, Interaction.BREAK_BLOCK)) {
                     p.sendMessage("§cCuidado com o ban em! Rs");
                     return;
                 }
 
-                // Dropa e remove
-                ItemStack itemToDrop = sfItem.getItem().clone();
-                block.getWorld().dropItemNaturally(block.getLocation(), itemToDrop);
-                block.setType(Material.AIR);
-                BlockStorage.clearBlockInfo(block);
 
-                p.sendActionBar("§aItem do Addon " + nomeDoAddon + " removido!");
+                BlockBreakEvent breakEvent = new BlockBreakEvent(block, p);
+                Bukkit.getPluginManager().callEvent(breakEvent);
+
+
+                if (!breakEvent.isCancelled()) {
+                    block.setType(Material.AIR);
+
+
+                    BlockStorage.clearBlockInfo(block);
+                }
+
+                p.sendActionBar("§aItem do Addon " + nomeDoAddon + " removido com sucesso!");
             }
         });
     }

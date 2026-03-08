@@ -30,10 +30,8 @@ public class ToolSetup {
         new SlimefunItem(SourceFUNItemGroups.TOOLS, unbFisher, RecipeType.ENHANCED_CRAFTING_TABLE, new ItemStack[9]).register(plugin);
 
         new QuebraTreco(SourceFUNItemGroups.TOOLS,
-                new SlimefunItemStack("SOURCE_QUEBRA_TECO", Material.NETHERITE_HOE, "§x§E§5§9§6§0§5Quebra Treco", "",
-                        "§x§6§D§6§D§6§DQuebra Items do slimefun em geral",
-                        "§x§3§C§3§C§3§CCuidado, os itens dentro da máquina sumirão",
-                        "§x§3§C§3§C§3§Ccaso quebre com isso"),
+                new SlimefunItemStack("SOURCE_QUEBRA_TECO", Material.NETHERITE_HOE, "§x§E§5§9§6§0§5Tira Treco", "",
+                        "§x§6§D§6§D§6§DQuebra Items do slimefun em geral"),
                 RecipeType.ENHANCED_CRAFTING_TABLE,
                 new ItemStack[] { new ItemStack(Material.BARRIER), new ItemStack(Material.GOLD_INGOT), new ItemStack(Material.PISTON),
                         new ItemStack(Material.GOLD_INGOT), new ItemStack(Material.REDSTONE_BLOCK), new ItemStack(Material.GOLD_INGOT),
