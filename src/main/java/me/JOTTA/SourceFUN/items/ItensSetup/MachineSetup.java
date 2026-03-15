@@ -3,8 +3,10 @@ package me.JOTTA.SourceFUN.items.ItensSetup;
 import io.github.thebusybiscuit.slimefun4.api.items.SlimefunItem;
 import io.github.thebusybiscuit.slimefun4.api.items.SlimefunItemStack;
 import io.github.thebusybiscuit.slimefun4.api.recipes.RecipeType;
+import io.github.thebusybiscuit.slimefun4.implementation.SlimefunItems;
 import io.github.thebusybiscuit.slimefun4.libraries.dough.items.CustomItemStack;
 import me.JOTTA.SourceFUN.SourceFUN;
+import me.JOTTA.SourceFUN.items.ItensSetup.MachinesRecipes.DeathMachineDrops;
 import me.JOTTA.SourceFUN.items.ItensSetup.MachinesRecipes.StonecutterRecipes;
 import me.JOTTA.SourceFUN.items.groups.SourceFUNItemGroups;
 import me.JOTTA.SourceFUN.items.machines.*;
@@ -112,7 +114,7 @@ public class MachineSetup {
         if (thornBit != null) tier6.addChanceDrop(new CustomItemStack(thornBit.getItem(), 40), 40.0);
         if (supNuggets != null) tier6.addChanceDrop(new CustomItemStack(supNuggets.getItem(), 20), 40.0);
         tier6.register(plugin);
-        IndustrialStonecutter stonecutter = new IndustrialStonecutter(
+        IndustrialMachine stonecutter = new IndustrialMachine(
                 SourceFUNItemGroups.MACHINES,
                 new SlimefunItemStack("SOURCE_INDUSTRIAL_STONECUTTER", Material.STONECUTTER, "&6Industrial Stonecutter", "", "&7Cortador de pedras industrial", "&7Selecione a receita no menu"),
                 RecipeType.ENHANCED_CRAFTING_TABLE,
@@ -126,10 +128,125 @@ public class MachineSetup {
         StonecutterRecipes.registerAll(stonecutter);
         stonecutter.register(plugin);
 
+
+
+        GenericMachine stoneCompressor = new GenericMachine(
+                SourceFUNItemGroups.MACHINES,
+                new SlimefunItemStack("SOURCE_COBBLE_PRESS_ADVANCED", Material.SMOOTH_STONE, "§x§F§F§2§C§3§DAdvanced §x§8§C§8§C§8§CCobble Press", "",
+                        "§x§9§2§0§0§0§0End-Game Machine", "§8⇨ §e⚡ §7Consumo: 1748 J/t", "§8⇨ §b❄ §7Capacidade: 2048 J"),
+                RecipeType.ENHANCED_CRAFTING_TABLE,
+                new ItemStack[] {
+                        new ItemStack(Material.BARRIER), new ItemStack(Material.BARRIER), new ItemStack(Material.BARRIER),
+                        new ItemStack(Material.BARRIER), new ItemStack(Material.BARRIER), new ItemStack(Material.BARRIER),
+                        new ItemStack(Material.BARRIER), new ItemStack(Material.BARRIER), new ItemStack(Material.BARRIER)
+                },
+                1748, // Energia (consumo)
+                2048, // Capacidade
+                1    // Velocidade
+        );
+
+
+        SlimefunItem st1 = SlimefunItem.getById("IE_COMPRESSED_COBBLESTONE_1");
+        if (st1 != null) {
+            stoneCompressor.addRecipe(1,
+                    new ItemStack(Material.COBBLESTONE, 64),
+                    new CustomItemStack(st1.getItem(), 16)
+            );
+        }
+
+
+        for (int i = 1; i <= 4; i++) {
+            SlimefunItem atual = SlimefunItem.getById("IE_COMPRESSED_COBBLESTONE_" + i);
+            SlimefunItem proximo = SlimefunItem.getById("IE_COMPRESSED_COBBLESTONE_" + (i + 1));
+
+            if (atual != null && proximo != null) {
+                stoneCompressor.addRecipe(1,
+                        new CustomItemStack(atual.getItem(), 64),
+                        new CustomItemStack(proximo.getItem(), 16)
+                );
+            }
+        }
+
+        stoneCompressor.register(plugin);
+        SlimefunItem titanium = SlimefunItem.getById("IE_TITANIUM");
+        GenericMachine sourcePress = new GenericMachine(
+                SourceFUNItemGroups.MACHINES,
+                new SlimefunItemStack("SOURCE_PRESS_ADVANCED", Material.PISTON,
+                        "§x§F§F§2§C§3§DAdvanced §x§8§C§8§C§8§CEletric Press",
+                        "", "§x§9§2§0§0§0§0End-Game Machine", "§8⇨ §e⚡ §7Consumo: 2058 J/t", "§8⇨ §b❄ §7Capacidade: 12564 J"),
+                RecipeType.ENHANCED_CRAFTING_TABLE,
+                new ItemStack[] {
+                        new ItemStack(Material.BARRIER), new ItemStack(Material.BARRIER), new ItemStack(Material.BARRIER),
+                        new ItemStack(Material.BARRIER), new ItemStack(Material.BARRIER), new ItemStack(Material.BARRIER),
+                        new ItemStack(Material.BARRIER), new ItemStack(Material.BARRIER), new ItemStack(Material.BARRIER)
+                },
+                2058, // Energia (consumo)
+                12564, // Capacidade
+                1    // Velocidade
+        );
+        sourcePress.addRecipe(4, SlimefunItems.REINFORCED_ALLOY_INGOT.asQuantity(64), SlimefunItems.REINFORCED_PLATE.asQuantity(8));
+        sourcePress.addRecipe(4, SlimefunItems.STEEL_INGOT.asQuantity(64), SlimefunItems.STEEL_PLATE.asQuantity(8));
+        sourcePress.addRecipe(4, ResourceSetup.maraging.asQuantity(64), ResourceSetup.maragingPlate.asQuantity(8));
+        sourcePress.addRecipe(4,new CustomItemStack(titanium.getItem(), 64) , ResourceSetup.titaniumPlate.asQuantity(8));
+        sourcePress.addRecipe(4, new ItemStack(Material.NETHER_WART, 32) , SlimefunItems.MAGIC_LUMP_1.asQuantity(64));
+        sourcePress.addRecipe(4, SlimefunItems.MAGIC_LUMP_1.asQuantity(64), SlimefunItems.MAGIC_LUMP_2.asQuantity(16));
+        sourcePress.addRecipe(4, SlimefunItems.MAGIC_LUMP_2.asQuantity(64), SlimefunItems.MAGIC_LUMP_3.asQuantity(16));
+
+        sourcePress.register(plugin);
+
+
+
+
+        SlimefunItemStack energyConnectorItem = new SlimefunItemStack(
+                "SOURCE_ENERGY_CONNECTOR",
+                Material.GREEN_WOOL,
+                "&6Conector de Energia",
+                "",
+                "&7§x§8§3§8§3§8§3Range: §x§F§A§0§0§0§06 §x§F§1§F§F§0§0blocks",
+                ""
+        );
+
+
+        ItemStack[] recipe = {
+                new ItemStack(Material.BARRIER), new ItemStack(Material.COPPER_INGOT), new ItemStack(Material.IRON_INGOT),
+                new ItemStack(Material.COPPER_INGOT),new ItemStack(Material.COPPER_INGOT) , new ItemStack(Material.COPPER_INGOT),
+                new ItemStack(Material.IRON_INGOT), new ItemStack(Material.COPPER_INGOT), new ItemStack(Material.IRON_INGOT)
+        };
+
+
+        EnergyConnector energyConnector = new EnergyConnector(
+                SourceFUNItemGroups.MACHINES,
+                energyConnectorItem,
+                RecipeType.ENHANCED_CRAFTING_TABLE,
+                recipe,
+                new ItemStack(Material.AIR)
+        );
+        energyConnector.register(plugin);
+
+        IndustrialMachine gluttonyMachinery = new IndustrialMachine(
+                SourceFUNItemGroups.MACHINES,
+                new SlimefunItemStack("SOURCE_GLUTTONY_MACHINERY", Material.SMOKER,
+                        "§x§3§4§8§8§0§0Glutonny Machinery", "", "§x§9§2§0§0§0§0End-Game Machine",
+                        "§8⇨ §e⚡ §7Consumo: 1362 J/t", "§8⇨ §b❄ §7Capacidade: 8012 J"),
+                RecipeType.ENHANCED_CRAFTING_TABLE,
+                new ItemStack[] {
+                        new ItemStack(Material.BARRIER), new ItemStack(Material.BARRIER), new ItemStack(Material.BARRIER),
+                        new ItemStack(Material.BARRIER), new ItemStack(Material.BARRIER), new ItemStack(Material.BARRIER),
+                        new ItemStack(Material.BARRIER), new ItemStack(Material.BARRIER), new ItemStack(Material.BARRIER)
+                },
+                1362,
+                8012,
+                4
+        );
+        DeathMachineDrops.registerAll(gluttonyMachinery);
+        gluttonyMachinery.register(plugin);
+
+
+
     }
 
 
-    ;
+
 
 
     private static WardenQuarry addBasicLoot(WardenQuarry q, int amt) {

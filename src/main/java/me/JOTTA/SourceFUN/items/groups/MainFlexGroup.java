@@ -49,7 +49,7 @@ public class MainFlexGroup extends FlexItemGroup {
             return false;
         });
 
-        // Slot 30 - FERRAMENTAS (CORRIGIDO)
+        // Slot 30 - FERRAMENTAS
         menu.addItem(30, new CustomItemStack(Material.DIAMOND_PICKAXE, "§x§5§4§D§A§F§4F§x§5§4§D§3§F§1e§x§5§4§C§C§E§Er§x§5§4§C§5§E§Ar§x§5§4§B§E§E§7a§x§5§4§B§7§E§3m§x§5§4§A§F§E§0e§x§5§4§A§8§D§Cn§x§5§4§A§1§D§9t§x§5§4§9§A§D§5a§x§5§4§9§3§D§2s"), (p, slot, item, action) -> {
             if (SourceFUNItemGroups.TOOLS != null) {
                 profile.getGuideHistory().add(this, 1);
@@ -83,8 +83,15 @@ public class MainFlexGroup extends FlexItemGroup {
             return false;
         });
 
-        // Slot 53 - INFORMAÇÃO (CORRIGIDO)
+        // Slot 53
         menu.addItem(53, new CustomItemStack(Material.DIAMOND_AXE, "§x§2§5§0§0§A§CSo§x§4§0§1§1§B§Aur§x§5§A§2§2§C§8ce§x§5§3§1§8§D§0MC", "§x§3§3§3§2§3§7Em desenvolvimento, caso tenha ideias mande no nosso discord."),
+                ChestMenuUtils.getEmptyClickHandler());
+
+        menu.addItem(51, new CustomItemStack(Material.DIAMOND_PICKAXE,
+                        "§x§7§8§0§0§9§9S§x§7§8§0§0§9§9u§x§6§C§2§8§A§2g§x§5§B§3§D§A§Ae§x§4§2§4§E§A§Fs§x§0§E§5§D§B§2t§x§0§0§6§A§B§3õ§x§0§0§7§6§B§3e§x§0§0§8§1§B§1s §x§0§0§9§4§A§AD§x§0§0§9§C§A§5a §x§0§0§A§B§9§7S§x§0§0§B§1§8§Fe§x§0§0§B§7§8§5m§x§0§0§B§C§7§Ba§x§0§0§C§1§7§1n§x§4§A§C§6§6§6a:",
+                        "- §x§a§b§0§3§b§6§lI§x§9§d§0§3§b§0§ls§x§8§f§0§4§a§a§la§x§8§1§0§4§a§4§lb§x§7§2§0§4§9§d§le§x§6§4§0§5§9§7§ll§x§5§6§0§5§9§1§ll§x§7§8§0§4§a§0§la§x§9§a§0§3§a§f§lE§x§b§b§0§2§b§d§lu§x§d§d§0§1§c§c§lu§x§f§f§0§0§d§b§lu§a§lJav",
+                        "- kashorn",
+                        "- Henrique uga uga"),
                 ChestMenuUtils.getEmptyClickHandler());
 
         menu.open(player);

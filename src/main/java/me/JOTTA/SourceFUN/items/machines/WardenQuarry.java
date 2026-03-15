@@ -9,6 +9,7 @@ import io.github.thebusybiscuit.slimefun4.core.attributes.RecipeDisplayItem;
 import io.github.thebusybiscuit.slimefun4.core.networks.energy.EnergyNetComponentType;
 import io.github.thebusybiscuit.slimefun4.libraries.dough.items.CustomItemStack;
 
+import me.JOTTA.SourceFUN.backgrounds.QuarryLayout;
 import me.mrCookieSlime.CSCoreLibPlugin.Configuration.Config;
 import me.mrCookieSlime.Slimefun.Objects.handlers.BlockTicker;
 import me.mrCookieSlime.Slimefun.api.BlockStorage;
@@ -18,6 +19,7 @@ import me.mrCookieSlime.Slimefun.api.item_transport.ItemTransportFlow;
 
 import org.bukkit.Material;
 import org.bukkit.block.Block;
+import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 
 import javax.annotation.Nonnull;
@@ -33,7 +35,7 @@ public class WardenQuarry extends SlimefunItem implements EnergyNetComponent, Re
     private final List<ItemStack> guaranteedDrops = new ArrayList<>();
     private final Map<ItemStack, Double> chanceDrops = new HashMap<>();
 
-    private static final int[] OUTPUT_SLOTS = {29,30,31,32,33,38,39,40,41,42};
+    private static final int[] OUTPUT_SLOTS = {19,20,21,22,23,24,25,28,29,30,31,32,33,34,37,38,39,40,41,42,43,46,47,48,49,50,51,52};
 
     public WardenQuarry(ItemGroup itemGroup,
                         SlimefunItemStack item,
@@ -53,20 +55,9 @@ public class WardenQuarry extends SlimefunItem implements EnergyNetComponent, Re
 
             @Override
             public void init() {
+                QuarryLayout.apply(this);
 
-                int[] background = {
-                        0,1,2,3,5,6,7,8,
-                        9,10,11,12,13,14,15,16,17,
-                        18,26,27,35,36,44,45,53
-                };
 
-                for (int slot : background) {
-                    addItem(slot, new CustomItemStack(Material.BLACK_STAINED_GLASS_PANE, " "));
-                    addMenuClickHandler(slot, (p, s, i, a) -> false);
-                }
-
-                addItem(4, new CustomItemStack(Material.GRAY_STAINED_GLASS_PANE, "§7Aguardando energia..."));
-                addMenuClickHandler(4, (p, s, i, a) -> false);
             }
 
             @Override
@@ -75,15 +66,13 @@ public class WardenQuarry extends SlimefunItem implements EnergyNetComponent, Re
             }
 
             @Override
-            public boolean canOpen(@Nonnull Block b, @Nonnull org.bukkit.entity.Player p) {
+            public boolean canOpen(@Nonnull Block b, @Nonnull Player p) {
                 return true;
             }
         };
     }
 
-    /* =========================
-       DROPS
-       ========================= */
+
 
     public WardenQuarry addGuaranteedDrop(ItemStack item) {
         guaranteedDrops.add(item);
@@ -95,9 +84,6 @@ public class WardenQuarry extends SlimefunItem implements EnergyNetComponent, Re
         return this;
     }
 
-    /* =========================
-       DISPLAY RECEITAS
-       ========================= */
 
     @Override
     @Nonnull
@@ -139,9 +125,7 @@ public class WardenQuarry extends SlimefunItem implements EnergyNetComponent, Re
         return stack.getType().name();
     }
 
-    /* =========================
-       TICK SYSTEM
-       ========================= */
+
 
     @Override
     public void preRegister() {
@@ -174,7 +158,7 @@ public class WardenQuarry extends SlimefunItem implements EnergyNetComponent, Re
             return;
         }
 
-        // 🔥 REMOVE ENERGIA TODO TICK
+
         removeCharge(b.getLocation(), energyPerTick);
 
         int progress = 0;

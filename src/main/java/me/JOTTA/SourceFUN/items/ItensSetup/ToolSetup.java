@@ -4,6 +4,7 @@ import io.github.thebusybiscuit.slimefun4.api.items.SlimefunItem;
 import io.github.thebusybiscuit.slimefun4.api.items.SlimefunItemStack;
 import io.github.thebusybiscuit.slimefun4.api.recipes.RecipeType;
 import me.JOTTA.SourceFUN.SourceFUN;
+import me.JOTTA.SourceFUN.items.Tools.QuebraTreco;
 import me.JOTTA.SourceFUN.items.groups.SourceFUNItemGroups;
 import org.bukkit.Material;
 import org.bukkit.enchantments.Enchantment;
@@ -21,9 +22,20 @@ public class ToolSetup {
                 new ItemStack[] { null, ResourceSetup.wardenEssence, null, null, ResourceSetup.wardenEssence, null, null, new ItemStack(Material.STICK), null }).register(plugin);
 
         // Vara Indestrutível
-        SlimefunItemStack unbFisher = new SlimefunItemStack("SOURCE_UNBREAKING_FISHER", Material.FISHING_ROD, "&x&5&4&D&A&F&4Vara de pesca indestrutível ");
+        SlimefunItemStack unbFisher = new SlimefunItemStack("SOURCE_UNBREAKING_FISHER",
+                Material.FISHING_ROD,
+                "&x&5&4&D&A&F&4Vara de pesca indestrutível "
+        );
         applyUnbreakable(unbFisher);
         new SlimefunItem(SourceFUNItemGroups.TOOLS, unbFisher, RecipeType.ENHANCED_CRAFTING_TABLE, new ItemStack[9]).register(plugin);
+
+        new QuebraTreco(SourceFUNItemGroups.TOOLS,
+                new SlimefunItemStack("SOURCE_QUEBRA_TECO", Material.NETHERITE_HOE, "§x§E§5§9§6§0§5Tira Treco", "",
+                        "§x§6§D§6§D§6§DQuebra Items do slimefun em geral"),
+                RecipeType.ENHANCED_CRAFTING_TABLE,
+                new ItemStack[] { new ItemStack(Material.BARRIER), new ItemStack(Material.GOLD_INGOT), new ItemStack(Material.PISTON),
+                        new ItemStack(Material.GOLD_INGOT), new ItemStack(Material.REDSTONE_BLOCK), new ItemStack(Material.GOLD_INGOT),
+                        new ItemStack(Material.PISTON), new ItemStack(Material.GOLD_INGOT), new ItemStack(Material.PISTON) }).register(plugin);
     }
 
     private static void applyUnbreakable(ItemStack item) {
