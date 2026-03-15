@@ -9,6 +9,7 @@ import io.github.thebusybiscuit.slimefun4.core.attributes.RecipeDisplayItem;
 import io.github.thebusybiscuit.slimefun4.core.networks.energy.EnergyNetComponentType;
 import io.github.thebusybiscuit.slimefun4.libraries.dough.items.CustomItemStack;
 import io.github.thebusybiscuit.slimefun4.utils.ChestMenuUtils;
+import io.github.thebusybiscuit.slimefun4.utils.SlimefunUtils;
 import me.mrCookieSlime.CSCoreLibPlugin.Configuration.Config;
 import me.mrCookieSlime.Slimefun.Objects.handlers.BlockTicker;
 import me.mrCookieSlime.Slimefun.api.BlockStorage;
@@ -28,7 +29,7 @@ import javax.annotation.Nonnull;
 import java.util.ArrayList;
 import java.util.List;
 
-public class IndustrialStonecutter extends SlimefunItem implements EnergyNetComponent, RecipeDisplayItem {
+public class IndustrialMachine extends SlimefunItem implements EnergyNetComponent, RecipeDisplayItem {
 
     // --- LAYOUT ANEL 3x3 ---
 
@@ -59,7 +60,7 @@ public class IndustrialStonecutter extends SlimefunItem implements EnergyNetComp
     private final int capacity;
     private final int processingSpeed;
 
-    public IndustrialStonecutter(ItemGroup itemGroup, SlimefunItemStack item, RecipeType recipeType, ItemStack[] recipe, int energy, int capacity, int speed) {
+    public IndustrialMachine(ItemGroup itemGroup, SlimefunItemStack item, RecipeType recipeType, ItemStack[] recipe, int energy, int capacity, int speed) {
         super(itemGroup, item, recipeType, recipe);
         this.energyConsumption = energy;
         this.capacity = capacity;
@@ -68,7 +69,7 @@ public class IndustrialStonecutter extends SlimefunItem implements EnergyNetComp
         createPreset();
     }
 
-    public IndustrialStonecutter addRecipe(ItemStack input, int inAmount, ItemStack output, int outAmount) {
+    public IndustrialMachine addRecipe(ItemStack input, int inAmount, ItemStack output, int outAmount) {
         recipes.add(new CutterRecipe(input, inAmount, output, outAmount));
         return this;
     }
@@ -123,7 +124,7 @@ public class IndustrialStonecutter extends SlimefunItem implements EnergyNetComp
         addItemHandler(new BlockTicker() {
             @Override
             public void tick(Block b, SlimefunItem item, Config data) {
-                IndustrialStonecutter.this.tick(b);
+                IndustrialMachine.this.tick(b);
             }
             @Override
             public boolean isSynchronized() { return true; }
@@ -224,7 +225,7 @@ public class IndustrialStonecutter extends SlimefunItem implements EnergyNetComp
 
         // Verifica Slot 10
         ItemStack itemInInput = menu.getItemInSlot(INPUT_SLOT);
-        if (itemInInput != null && itemInInput.isSimilar(recipe.input) && itemInInput.getAmount() >= recipe.inputAmount) {
+        if  (itemInInput != null && SlimefunUtils.isItemSimilar(itemInInput, recipe.input, true) && itemInInput.getAmount() >= recipe.inputAmount) {
 
             ItemStack result = recipe.output.clone();
             result.setAmount(recipe.outputAmount);

@@ -6,6 +6,7 @@ import io.github.thebusybiscuit.slimefun4.api.recipes.RecipeType;
 import io.github.thebusybiscuit.slimefun4.implementation.SlimefunItems;
 import io.github.thebusybiscuit.slimefun4.libraries.dough.items.CustomItemStack;
 import me.JOTTA.SourceFUN.SourceFUN;
+import me.JOTTA.SourceFUN.items.ItensSetup.MachinesRecipes.DeathMachineDrops;
 import me.JOTTA.SourceFUN.items.ItensSetup.MachinesRecipes.StonecutterRecipes;
 import me.JOTTA.SourceFUN.items.groups.SourceFUNItemGroups;
 import me.JOTTA.SourceFUN.items.machines.*;
@@ -113,7 +114,7 @@ public class MachineSetup {
         if (thornBit != null) tier6.addChanceDrop(new CustomItemStack(thornBit.getItem(), 40), 40.0);
         if (supNuggets != null) tier6.addChanceDrop(new CustomItemStack(supNuggets.getItem(), 20), 40.0);
         tier6.register(plugin);
-        IndustrialStonecutter stonecutter = new IndustrialStonecutter(
+        IndustrialMachine stonecutter = new IndustrialMachine(
                 SourceFUNItemGroups.MACHINES,
                 new SlimefunItemStack("SOURCE_INDUSTRIAL_STONECUTTER", Material.STONECUTTER, "&6Industrial Stonecutter", "", "&7Cortador de pedras industrial", "&7Selecione a receita no menu"),
                 RecipeType.ENHANCED_CRAFTING_TABLE,
@@ -144,7 +145,7 @@ public class MachineSetup {
                 1    // Velocidade
         );
 
-// 1. Registro da primeira etapa (64 Cobblestone comum -> 8 Nível 1)
+
         SlimefunItem st1 = SlimefunItem.getById("IE_COMPRESSED_COBBLESTONE_1");
         if (st1 != null) {
             stoneCompressor.addRecipe(1,
@@ -153,8 +154,7 @@ public class MachineSetup {
             );
         }
 
-// 2. Loop para os níveis seguintes (64 do anterior -> 8 do próximo)
-// Vai do 1 até o 4, cobrindo as transições (1->2, 2->3, 3->4, 4->5)
+
         for (int i = 1; i <= 4; i++) {
             SlimefunItem atual = SlimefunItem.getById("IE_COMPRESSED_COBBLESTONE_" + i);
             SlimefunItem proximo = SlimefunItem.getById("IE_COMPRESSED_COBBLESTONE_" + (i + 1));
@@ -162,7 +162,7 @@ public class MachineSetup {
             if (atual != null && proximo != null) {
                 stoneCompressor.addRecipe(1,
                         new CustomItemStack(atual.getItem(), 64),
-                        new CustomItemStack(proximo.getItem(), 8)
+                        new CustomItemStack(proximo.getItem(), 16)
                 );
             }
         }
@@ -221,8 +221,27 @@ public class MachineSetup {
                 recipe,
                 new ItemStack(Material.AIR)
         );
-
         energyConnector.register(plugin);
+
+        IndustrialMachine gluttonyMachinery = new IndustrialMachine(
+                SourceFUNItemGroups.MACHINES,
+                new SlimefunItemStack("SOURCE_GLUTTONY_MACHINERY", Material.SMOKER,
+                        "§x§3§4§8§8§0§0Glutonny Machinery", "", "§x§9§2§0§0§0§0End-Game Machine",
+                        "§8⇨ §e⚡ §7Consumo: 1362 J/t", "§8⇨ §b❄ §7Capacidade: 8012 J"),
+                RecipeType.ENHANCED_CRAFTING_TABLE,
+                new ItemStack[] {
+                        new ItemStack(Material.BARRIER), new ItemStack(Material.BARRIER), new ItemStack(Material.BARRIER),
+                        new ItemStack(Material.BARRIER), new ItemStack(Material.BARRIER), new ItemStack(Material.BARRIER),
+                        new ItemStack(Material.BARRIER), new ItemStack(Material.BARRIER), new ItemStack(Material.BARRIER)
+                },
+                1362,
+                8012,
+                4
+        );
+        DeathMachineDrops.registerAll(gluttonyMachinery);
+        gluttonyMachinery.register(plugin);
+
+
 
     }
 

@@ -26,7 +26,11 @@ public class ResourceSetup {
     public static SlimefunItemStack wardenHeart;
     public static SlimefunItemStack completstar;
     public static SlimefunItemStack wardenHeartInfected;
-
+    public static SlimefunItemStack advancedMachinePlate;
+    public static SlimefunItemStack conjutiveAlloy;
+    public static SlimefunItemStack meatCore;
+    public static SlimefunItemStack advancedMeatCore;
+    public static SlimefunItemStack wardenMeatCore;
 
     public static void setup(SourceFUN plugin) {
         // --- Warden Essence ---
@@ -47,6 +51,38 @@ public class ResourceSetup {
         // --- Titanium & Voiding ---
         titaniumPlate = new SlimefunItemStack("SOURCE_TITANIUM_PLATE", Material.PAPER, "§x§5§4§D§A§F§4Titanium Plate", "");
         new SlimefunItem(SourceFUNItemGroups.RESOURCES, titaniumPlate, RecipeType.ENHANCED_CRAFTING_TABLE, new ItemStack[9]).register(plugin);
+
+        advancedMachinePlate = new SlimefunItemStack(
+                "SOURCE_ADVANCED_MACHINE_PLATE",
+                Material.PAPER,
+                "§x§B§8§B§8§B§8Advanced Machine Plate",
+                ""
+        );
+
+        new SlimefunItem(SourceFUNItemGroups.RESOURCES,
+                advancedMachinePlate,
+                RecipeType.ENHANCED_CRAFTING_TABLE,
+                new ItemStack[] {
+                        new ItemStack(Material.BARRIER), new ItemStack(Material.BARRIER), new ItemStack(Material.BARRIER),
+                        new ItemStack(Material.BARRIER), new ItemStack(Material.BARRIER), new ItemStack(Material.BARRIER),
+                        new ItemStack(Material.BARRIER), new ItemStack(Material.BARRIER), new ItemStack(Material.BARRIER)
+                }).register(plugin);
+
+        conjutiveAlloy = new SlimefunItemStack(
+                "SOURCE_CONJUTIVE_ALLOY",
+                Material.IRON_INGOT,
+                "§x§B§8§B§8§B§8Conjuctive Alloy",
+                ""
+        );
+
+        new SlimefunItem(SourceFUNItemGroups.RESOURCES,
+                conjutiveAlloy,
+                RecipeType.ENHANCED_CRAFTING_TABLE,
+                new ItemStack[] {
+                        new ItemStack(Material.BARRIER), new ItemStack(Material.BARRIER), new ItemStack(Material.BARRIER),
+                        new ItemStack(Material.BARRIER), new ItemStack(Material.BARRIER), new ItemStack(Material.BARRIER),
+                        new ItemStack(Material.BARRIER), new ItemStack(Material.BARRIER), new ItemStack(Material.BARRIER)
+                }).register(plugin);
 
         voidingWardenEssence = new SlimefunItemStack("SOURCE_VOIDING_ESSENCE", Material.NETHERITE_INGOT, "§x§0§B§3§C§2§4Voiding Warden Essence", "","§x§3§5§0§A§0§AA essência da morte em sua forma mais pura...");
         new SlimefunItem(SourceFUNItemGroups.RESOURCES, voidingWardenEssence, RecipeType.ENHANCED_CRAFTING_TABLE, new ItemStack[9]).register(plugin);
@@ -104,6 +140,59 @@ public class ResourceSetup {
                 completstar,
                 RecipeType.ENHANCED_CRAFTING_TABLE,
                 new ItemStack[9]).register(plugin);
+
+        meatCore = new SlimefunItemStack(
+                "MEAT_CORE",
+                Material.BEEF,
+                "§x§F§F§8§0§8§0Meat Core",
+                "",
+                "§x§B§E§B§E§B§ENúcleo básico de carne");
+
+            new SlimefunItem(
+                    SourceFUNItemGroups.RESOURCES,
+                    meatCore,
+                    RecipeType.ENHANCED_CRAFTING_TABLE,
+                    new ItemStack[] {
+                            null, null, null,
+                            null, new CustomItemStack(Material.BARRIER), null,
+                            null, null, null
+                    }).register(plugin);
+
+        advancedMeatCore = new SlimefunItemStack(
+                "ADVANCED_MEAT_CORE",
+                Material.MUTTON,
+                "§x§F§F§8§0§8§0Advanced Meat Core",
+                "",
+                "§x§B§E§B§E§B§ENúcleo avançado de carne");
+
+        new SlimefunItem(
+                SourceFUNItemGroups.RESOURCES,
+                advancedMeatCore,
+                RecipeType.ENHANCED_CRAFTING_TABLE,
+                new ItemStack[] {
+                        null, null, null,
+                        null, new CustomItemStack(Material.BARRIER), null,
+                        null, null, null
+                }).register(plugin);
+
+        wardenMeatCore = new SlimefunItemStack(
+                "WARDEN_MEAT_CORE",
+                Material.ENDER_EYE,
+                "§x§0§0§A§7§9§3Warden Meat Core",
+                "",
+                "§x§7§9§6§C§0§0Núcleo De carne vindo de uma civilização antiga");
+
+        new SlimefunItem(
+                SourceFUNItemGroups.RESOURCES,
+                wardenMeatCore,
+                RecipeType.ENHANCED_CRAFTING_TABLE,
+                new ItemStack[] {
+                        null, null, null,
+                        null, new CustomItemStack(Material.BARRIER), null,
+                        null, null, null
+                }).register(plugin);
+
+
 
       
         SlimefunItemStack cudogui = new SlimefunItemStack(

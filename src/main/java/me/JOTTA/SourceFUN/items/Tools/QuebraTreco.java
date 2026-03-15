@@ -37,6 +37,7 @@ public class QuebraTreco extends SlimefunItem {
         addonsPermitidos.add("SimpleMaterialGenerators");
         addonsPermitidos.add("FNAmplifications");
         addonsPermitidos.add("FoxyMachines");
+        addonsPermitidos.add("SlimeFrame");
     }
 
     @Override

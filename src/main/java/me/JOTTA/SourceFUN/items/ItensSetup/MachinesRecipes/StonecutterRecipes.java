@@ -1,6 +1,6 @@
 package me.JOTTA.SourceFUN.items.ItensSetup.MachinesRecipes;
 
-import me.JOTTA.SourceFUN.items.machines.IndustrialStonecutter;
+import me.JOTTA.SourceFUN.items.machines.IndustrialMachine;
 import org.bukkit.Material;
 import org.bukkit.inventory.ItemStack;
 
@@ -8,7 +8,7 @@ import org.bukkit.inventory.ItemStack;
 public class StonecutterRecipes {
 
 
-    public static void registerAll(IndustrialStonecutter stonecutter) {
+    public static void registerAll(IndustrialMachine stonecutter) {
 
         // --- QUARTZ ---
         ItemStack qBlock = new ItemStack(Material.QUARTZ_BLOCK);
