@@ -15,34 +15,52 @@ import org.bukkit.inventory.meta.ItemMeta;
 public class ToolSetup {
 
     public static void setup(SourceFUN plugin) {
-        // Espada Indestrutível
-        SlimefunItemStack unbSword = new SlimefunItemStack("SOURCE_UNBREAKING_SWORD", Material.IRON_SWORD, "&x&5&4&D&A&F&4Espada indestrutível ", "", "&7Lâmina indestrutível");
+        // --- SEGURANÇA DE MATERIAIS ---
+        // Se a essência não estiver pronta, usamos Netherite como reserva (fallback) para não deixar o craft grátis ou nulo
+        ItemStack essence = (ResourceSetup.wardenEssence != null) ? ResourceSetup.wardenEssence : new ItemStack(Material.NETHERITE_INGOT);
+
+        // 1. ESPADA INDESTRUTÍVEL (Lore restaurada)
+        SlimefunItemStack unbSword = new SlimefunItemStack("SOURCE_UNBREAKING_SWORD", Material.IRON_SWORD,
+                "&x&5&4&D&A&F&4Espada indestrutível ", "", "&7Lâmina indestrutível");
         applyUnbreakable(unbSword);
+
         new SlimefunItem(SourceFUNItemGroups.TOOLS, unbSword, RecipeType.ENHANCED_CRAFTING_TABLE,
-                new ItemStack[] { null, ResourceSetup.wardenEssence, null, null, ResourceSetup.wardenEssence, null, null, new ItemStack(Material.STICK), null }).register(plugin);
+                new ItemStack[] {
+                        null, essence, null,
+                        null, essence, null,
+                        null, new ItemStack(Material.STICK), null
+                }).register(plugin);
 
-        // Vara Indestrutível
-        SlimefunItemStack unbFisher = new SlimefunItemStack("SOURCE_UNBREAKING_FISHER",
-                Material.FISHING_ROD,
-                "&x&5&4&D&A&F&4Vara de pesca indestrutível "
-        );
+        // 2. VARA INDESTRUTÍVEL (Lore restaurada + Craft real)
+        SlimefunItemStack unbFisher = new SlimefunItemStack("SOURCE_UNBREAKING_FISHER", Material.FISHING_ROD,
+                "&x&5&4&D&A&F&4Vara de pesca indestrutível ", "", "&7Pesca infinita sem quebrar");
         applyUnbreakable(unbFisher);
-        new SlimefunItem(SourceFUNItemGroups.TOOLS, unbFisher, RecipeType.ENHANCED_CRAFTING_TABLE, new ItemStack[9]).register(plugin);
 
+        // Coloquei um craft que faz sentido pra não ficar "de graça"
+        new SlimefunItem(SourceFUNItemGroups.TOOLS, unbFisher, RecipeType.ENHANCED_CRAFTING_TABLE,
+                new ItemStack[] {
+                        null, null, essence,
+                        null, essence, new ItemStack(Material.STRING),
+                        essence, null, new ItemStack(Material.STRING)
+                }).register(plugin);
+
+        // 3. TIRA TRECO (Lore e Craft originais restaurados)
         new QuebraTreco(SourceFUNItemGroups.TOOLS,
                 new SlimefunItemStack("SOURCE_QUEBRA_TECO", Material.NETHERITE_HOE, "§x§E§5§9§6§0§5Tira Treco", "",
                         "§x§6§D§6§D§6§DQuebra Items do slimefun em geral"),
                 RecipeType.ENHANCED_CRAFTING_TABLE,
-                new ItemStack[] { new ItemStack(Material.BARRIER), new ItemStack(Material.GOLD_INGOT), new ItemStack(Material.PISTON),
+                new ItemStack[] {
+                        new ItemStack(Material.BARRIER), new ItemStack(Material.GOLD_INGOT), new ItemStack(Material.PISTON),
                         new ItemStack(Material.GOLD_INGOT), new ItemStack(Material.REDSTONE_BLOCK), new ItemStack(Material.GOLD_INGOT),
-                        new ItemStack(Material.PISTON), new ItemStack(Material.GOLD_INGOT), new ItemStack(Material.PISTON) }).register(plugin);
+                        new ItemStack(Material.PISTON), new ItemStack(Material.GOLD_INGOT), new ItemStack(Material.PISTON)
+                }).register(plugin);
     }
 
     private static void applyUnbreakable(ItemStack item) {
         ItemMeta meta = item.getItemMeta();
         if (meta != null) {
             meta.setUnbreakable(true);
-            meta.addEnchant(Enchantment.DURABILITY, 1, true);
+            meta.addEnchant(Enchantment.UNBREAKING, 1, true);
             meta.addItemFlags(ItemFlag.HIDE_UNBREAKABLE, ItemFlag.HIDE_ENCHANTS);
             item.setItemMeta(meta);
         }

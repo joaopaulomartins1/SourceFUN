@@ -11,33 +11,38 @@ import org.bukkit.inventory.ItemStack;
 import java.util.concurrent.ThreadLocalRandom;
 import java.util.UUID;
 
-
 public class WardenDropListener implements Listener {
 
     @EventHandler(priority = EventPriority.HIGH)
     public void onWardenDeath(EntityDeathEvent e) {
         if (!(e.getEntity() instanceof Warden)) return;
 
-        UUID id = e.getEntity().getUniqueId();
+        Warden warden = (Warden) e.getEntity();
+        UUID id = warden.getUniqueId();
 
-        // 1. CHECA SE É BOSS (Dropa 8)
+        // 1. CHECA SE É O BOSS (Dropa 8 Corações)
+        // Usamos liveBosses para identificar se é o seu Corrupted Warden
         if (WardenBoss.liveBosses.containsKey(id)) {
             if (ResourceSetup.wardenHeartInfected != null) {
+                // Criamos o item de drop
                 ItemStack dropHeart = ResourceSetup.wardenHeartInfected.clone();
                 dropHeart.setAmount(8);
+
+                // Adicionamos à lista de drops do evento
                 e.getDrops().add(dropHeart);
             }
-            return; // Se é boss, não roda a chance de 20%
+            // Importante: limpamos o Boss da lista após a morte aqui ou no Boss.java
+            // para não vazar memória.
+            return;
         }
 
         // 2. WARDEN COMUM (20% de vir Essência)
-        if (ThreadLocalRandom.current().nextInt(100) < 20) {
+        // Dica: use nextDouble(100) < 20.0 para ser mais preciso
+        if (ThreadLocalRandom.current().nextDouble(100.0) < 20.0) {
             if (ResourceSetup.wardenEssence != null) {
                 ItemStack dropEssence = ResourceSetup.wardenEssence.clone();
                 dropEssence.setAmount(1);
                 e.getDrops().add(dropEssence);
-
-
             }
         }
     }

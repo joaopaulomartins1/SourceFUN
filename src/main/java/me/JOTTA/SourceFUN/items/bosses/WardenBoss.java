@@ -1,8 +1,10 @@
 package me.JOTTA.SourceFUN.items.bosses;
 
+import io.github.thebusybiscuit.slimefun4.api.items.SlimefunItem;
 import me.JOTTA.SourceFUN.SourceFUN;
 import org.bukkit.*;
 import org.bukkit.attribute.Attribute;
+import org.bukkit.attribute.AttributeInstance;
 import org.bukkit.boss.BarColor;
 import org.bukkit.boss.BarStyle;
 import org.bukkit.boss.BossBar;
@@ -29,9 +31,9 @@ public class WardenBoss implements Listener {
     public static final HashMap<UUID, Double> liveBosses = new HashMap<>();
     private static final HashMap<UUID, BossBar> bossBars = new HashMap<>();
 
-    // Variáveis globais garantidas para não dar erro de "Cannot find symbol"
     private static final double MAX_REAL_HEALTH = 70000.0;
-    private static final double VANILLA_BASE_HEALTH = 2000.0;
+    private static final double MAX_VANILLA_ALLOWED = 1024.0;
+    private static final double VANILLA_TOTAL_HEALTH = 2000.0;
 
     public static void spawn(@Nonnull SourceFUN plugin, @Nonnull Location loc) {
         Chunk chunk = loc.getChunk();
@@ -44,8 +46,21 @@ public class WardenBoss implements Listener {
         boss.setCustomName("§d§lCorrupted Warden");
         boss.setCustomNameVisible(true);
 
-        boss.getAttribute(Attribute.GENERIC_MAX_HEALTH).setBaseValue(VANILLA_BASE_HEALTH);
-        boss.setHealth(VANILLA_BASE_HEALTH);
+        AttributeInstance healthAttr = boss.getAttribute(Attribute.GENERIC_MAX_HEALTH);
+        if (healthAttr != null) {
+
+            healthAttr.setBaseValue(MAX_VANILLA_ALLOWED);
+        }
+
+        // Enche a vida base até o talo
+        boss.setHealth(MAX_VANILLA_ALLOWED);
+
+        // Injeta o que sobrou (2000 - 1024 = 976) como escudos de absorção puros
+        double excessHealth = VANILLA_TOTAL_HEALTH - MAX_VANILLA_ALLOWED;
+        if (excessHealth > 0) {
+            boss.setAbsorptionAmount(excessHealth);
+        }
+        // ========================================================
 
         UUID id = boss.getUniqueId();
         liveBosses.put(id, MAX_REAL_HEALTH);
@@ -83,7 +98,7 @@ public class WardenBoss implements Listener {
 
                     if (timer % 15 == 0) {
                         Location randLoc = boss.getLocation().clone().add(ThreadLocalRandom.current().nextDouble(-3, 3), 1, ThreadLocalRandom.current().nextDouble(-3, 3));
-                        boss.getWorld().spawnParticle(Particle.EXPLOSION_LARGE, randLoc, 1);
+                        boss.getWorld().spawnParticle(Particle.EXPLOSION, randLoc, 1);
                         boss.getWorld().strikeLightningEffect(randLoc);
                     }
                 }
@@ -144,20 +159,27 @@ public class WardenBoss implements Listener {
             double newHP = currentHP - damage;
 
             if (newHP <= 0) {
-                // Mantemos o id na lista com vida a zero para o onDeath ser executado!
                 liveBosses.put(id, 0.0);
                 updateBossBar(id, 0);
-
                 e.setCancelled(true);
-                ((Warden) e.getEntity()).setHealth(0.0); // Força a morte instantânea do Minecraft
+                ((Warden) e.getEntity()).setHealth(0.0);
             } else {
                 liveBosses.put(id, newHP);
                 updateBossBar(id, newHP);
 
                 double percentage = newHP / MAX_REAL_HEALTH;
-                double syncHP = Math.max(1.0, VANILLA_BASE_HEALTH * percentage);
+                double syncHP = Math.max(1.0, VANILLA_TOTAL_HEALTH * percentage);
 
-                ((Warden) e.getEntity()).setHealth(syncHP);
+                // Re-calcula a gambiarra de absorção toda vez que o boss toma dano
+                Warden w = (Warden) e.getEntity();
+                if (syncHP > MAX_VANILLA_ALLOWED) {
+                    w.setHealth(MAX_VANILLA_ALLOWED);
+                    w.setAbsorptionAmount(syncHP - MAX_VANILLA_ALLOWED);
+                } else {
+                    w.setAbsorptionAmount(0);
+                    w.setHealth(syncHP);
+                }
+
                 e.setDamage(0.001);
             }
         }
@@ -170,8 +192,13 @@ public class WardenBoss implements Listener {
             Location l = e.getEntity().getLocation();
             l.getWorld().playSound(l, Sound.ENTITY_WITHER_DEATH, 3f, 0.5f);
 
-            // Se for preciso adicionar drops customizados ou espalhar itens do Slimefun,
-            // é exatamente aqui que colocamos a lógica.
+            // --- DROP DO ITEM SLIMEFUN ---
+            SlimefunItem infectedHeart = SlimefunItem.getById("SOURCE_WARDEN_HEART_INFECTED");
+            if (infectedHeart != null) {
+                l.getWorld().dropItemNaturally(l, infectedHeart.getItem().clone());
+                // Efeito visual de alma saindo do boss
+                l.getWorld().spawnParticle(Particle.SOUL, l, 100, 0.5, 1, 0.5, 0.1);
+            }
 
             new BukkitRunnable() {
                 @Override
