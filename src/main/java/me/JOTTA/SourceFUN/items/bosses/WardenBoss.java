@@ -191,15 +191,6 @@ public class WardenBoss implements Listener {
         if (liveBosses.containsKey(id)) {
             Location l = e.getEntity().getLocation();
             l.getWorld().playSound(l, Sound.ENTITY_WITHER_DEATH, 3f, 0.5f);
-
-            // --- DROP DO ITEM SLIMEFUN ---
-            SlimefunItem infectedHeart = SlimefunItem.getById("SOURCE_WARDEN_HEART_INFECTED");
-            if (infectedHeart != null) {
-                l.getWorld().dropItemNaturally(l, infectedHeart.getItem().clone());
-                // Efeito visual de alma saindo do boss
-                l.getWorld().spawnParticle(Particle.SOUL, l, 100, 0.5, 1, 0.5, 0.1);
-            }
-
             new BukkitRunnable() {
                 @Override
                 public void run() {

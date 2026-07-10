@@ -64,6 +64,13 @@ public class MainFlexGroup extends FlexItemGroup {
             }
             return false;
         });
+        menu.addItem(32, new CustomItemStack(Material.SMOOTH_STONE, "&x&8&E&8&8&F&FG&x&8&A&8&A&F&2e&x&8&7&8&C&E&5r&x&8&3&8&E&D&8a&x&8&0&9&1&C&Bd&x&7&C&9&3&B&Eo&x&7&9&9&5&B&1r&x&7&5&9&7&A&4e&x&7&2&9&9&9&8s &x&6&A&9&D&7&ES&x&6&7&9&F&7&1i&x&6&3&A&2&6&4m&x&6&0&A&4&5&7p&x&5&C&A&6&4&Al&x&5&9&A&8&3&De&x&5&5&A&A&3&0s"), (p, slot, item, action) -> {
+            if (SourceFUNItemGroups.SMG != null) {
+                profile.getGuideHistory().add(this, 1);
+                SlimefunGuide.openItemGroup(profile, SourceFUNItemGroups.SMG, mode, 1);
+            }
+            return false;
+        });
 
         // Slot 52 - DISCORD
         menu.addItem(52, new CustomItemStack(Material.BOOK, "§x§2§5§0§0§A§CDiscord", "§x§3§3§3§2§3§7Clique aqui para acessar nosso discord"), (p, slot, item, action) -> {

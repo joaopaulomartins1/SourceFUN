@@ -15,11 +15,8 @@ import org.bukkit.inventory.meta.ItemMeta;
 public class ToolSetup {
 
     public static void setup(SourceFUN plugin) {
-        // --- SEGURANÇA DE MATERIAIS ---
-        // Se a essência não estiver pronta, usamos Netherite como reserva (fallback) para não deixar o craft grátis ou nulo
         ItemStack essence = (ResourceSetup.wardenEssence != null) ? ResourceSetup.wardenEssence : new ItemStack(Material.NETHERITE_INGOT);
 
-        // 1. ESPADA INDESTRUTÍVEL (Lore restaurada)
         SlimefunItemStack unbSword = new SlimefunItemStack("SOURCE_UNBREAKING_SWORD", Material.IRON_SWORD,
                 "&x&5&4&D&A&F&4Espada indestrutível ", "", "&7Lâmina indestrutível");
         applyUnbreakable(unbSword);
@@ -31,12 +28,12 @@ public class ToolSetup {
                         null, new ItemStack(Material.STICK), null
                 }).register(plugin);
 
-        // 2. VARA INDESTRUTÍVEL (Lore restaurada + Craft real)
+
         SlimefunItemStack unbFisher = new SlimefunItemStack("SOURCE_UNBREAKING_FISHER", Material.FISHING_ROD,
                 "&x&5&4&D&A&F&4Vara de pesca indestrutível ", "", "&7Pesca infinita sem quebrar");
         applyUnbreakable(unbFisher);
 
-        // Coloquei um craft que faz sentido pra não ficar "de graça"
+
         new SlimefunItem(SourceFUNItemGroups.TOOLS, unbFisher, RecipeType.ENHANCED_CRAFTING_TABLE,
                 new ItemStack[] {
                         null, null, essence,
@@ -44,7 +41,7 @@ public class ToolSetup {
                         essence, null, new ItemStack(Material.STRING)
                 }).register(plugin);
 
-        // 3. TIRA TRECO (Lore e Craft originais restaurados)
+
         new QuebraTreco(SourceFUNItemGroups.TOOLS,
                 new SlimefunItemStack("SOURCE_QUEBRA_TECO", Material.NETHERITE_HOE, "§x§E§5§9§6§0§5Tira Treco", "",
                         "§x§6§D§6§D§6§DQuebra Items do slimefun em geral"),
