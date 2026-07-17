@@ -132,14 +132,13 @@ public class ResourceSetup {
                 "", "&x&1&3&A&C&B&1A &x&B&B&9&7&F&9s&x&8&1&7&A&C&Ai&x&4&8&5&D&9&Cn&x&0&E&4&0&6&Dg&x&2&C&4&9&5&8u&x&4&A&5&2&4&3l&x&6&9&5&B&2&Fa&x&8&7&6&4&1&Ar&x&A&5&6&D&0&5i&x&7&1&9&9&4&5d&x&3&C&C&4&8&6a&x&0&8&F&0&C&6d&x&1&A&A&2&B&De &x&2&B&5&5&B&3c&x&2&B&5&6&B&2o&x&2&A&5&6&B&0m&x&2&9&5&7&A&Fp&x&6&1&3&F&B&4l&x&9&9&2&7&B&Ae&x&D&1&0&F&B&Ft&x&7&7&7&F&C&3a&x&1&1&3&F&7&E.");
         new SlimefunItem(
                 SourceFUNItemGroups.RESOURCES,
-                completstar,
+                wardenHeartInfected,
                 RecipeType.MOB_DROP,
                 new ItemStack[] {
                         null, null, null,
-                        null, new CustomItemStack(Material.WARDEN_SPAWN_EGG, "§d§lCorrupted Warden"), null,
+                        null, new ItemStack(Material.WARDEN_SPAWN_EGG), null,
                         null, null, null
                 }).register(plugin);
-
         // Mantido
         meatCore = new SlimefunItemStack(
                 "MEAT_CORE",

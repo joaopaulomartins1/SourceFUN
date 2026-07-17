@@ -102,5 +102,11 @@ public class MainFlexGroup extends FlexItemGroup {
                 ChestMenuUtils.getEmptyClickHandler());
 
         menu.open(player);
+
+        // Slot 1 - MISSÕES
+        menu.addItem(0, new CustomItemStack(Material.BOOK, "§x§5§4§D§A§F§4M§x§5§4§C§B§E§Ci§x§5§4§B§B§E§5s§x§5§4§A§C§D§Ds§x§5§4§9§C§D§5õ§x§5§4§8§D§C§Ce§x§5§4§7§D§C§4s", "", "§7Clique para ver suas missões"), (p, slot, item, action) -> {
+            me.JOTTA.SourceFUN.quests.MissionsMenu.open(p);
+            return false;
+        });
     }
 }

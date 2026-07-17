@@ -5,6 +5,7 @@ import io.github.thebusybiscuit.slimefun4.api.items.SlimefunItemStack;
 import io.github.thebusybiscuit.slimefun4.api.recipes.RecipeType;
 import me.JOTTA.SourceFUN.SourceFUN;
 import me.JOTTA.SourceFUN.items.Tools.QuebraTreco;
+import me.JOTTA.SourceFUN.items.Tools.RadiationRune;
 import me.JOTTA.SourceFUN.items.groups.SourceFUNItemGroups;
 import org.bukkit.Material;
 import org.bukkit.enchantments.Enchantment;
@@ -50,6 +51,26 @@ public class ToolSetup {
                         new ItemStack(Material.BARRIER), new ItemStack(Material.GOLD_INGOT), new ItemStack(Material.PISTON),
                         new ItemStack(Material.GOLD_INGOT), new ItemStack(Material.REDSTONE_BLOCK), new ItemStack(Material.GOLD_INGOT),
                         new ItemStack(Material.PISTON), new ItemStack(Material.GOLD_INGOT), new ItemStack(Material.PISTON)
+                }).register(plugin);
+
+        // Runa de Radiação
+        SlimefunItemStack radiationRune = new SlimefunItemStack(
+                "RADIATION_RUNE",
+                Material.NETHER_STAR,
+                "&d&lAncient Rune &8&l[&2&lRadiation&8&l]",
+                "&7Jogue no chão perto de uma peça",
+                "&7de armadura para torná-la imune",
+                "&7ao efeito de radiação."
+        );
+
+        new RadiationRune(
+                SourceFUNItemGroups.TOOLS,
+                radiationRune,
+                RecipeType.ENHANCED_CRAFTING_TABLE,
+                new ItemStack[] {
+                        null, new ItemStack(Material.NETHER_STAR), null,
+                        new ItemStack(Material.GLOWSTONE_DUST), new ItemStack(Material.TOTEM_OF_UNDYING), new ItemStack(Material.GLOWSTONE_DUST),
+                        null, new ItemStack(Material.GOLD_BLOCK), null
                 }).register(plugin);
     }
 

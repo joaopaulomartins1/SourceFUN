@@ -173,9 +173,7 @@ public class SMGsetup {
                 new ItemStack(Material.PISTON), new ItemStack(Material.LAVA_BUCKET), new ItemStack(Material.PISTON)
         }, 120, new ItemStack(Material.DIAMOND)).register(plugin);
 
-        // ==========================================
-        // 5. COMPRESSORES (ANDESITO E DIORITO)
-        // ==========================================
+
         SlimefunItemStack andesiteItem = new SlimefunItemStack("SOURCE_ANDESITE_GENERATOR", Material.ANDESITE, "&7&lGerador de Andesito", "", "&fGera Andesitos automaticamente", "", "&b⚡ Velocidade: &fNormal (12s)", "&6⚡ Produção: &f1 Andesitos");
         new SimpleMaterialClass(SMG, andesiteItem, RecipeType.COMPRESSOR, new ItemStack[] {
                 new ItemStack(Material.COBBLESTONE, 8), null, null,
@@ -192,7 +190,7 @@ public class SMGsetup {
 
     }
 
-    // Método auxiliar para buscar os itens customizados sem poluir o código
+
     private static ItemStack sfItem(String id) {
         SlimefunItem item = SlimefunItem.getById(id);
         return item != null ? item.getItem() : new ItemStack(Material.BARRIER);

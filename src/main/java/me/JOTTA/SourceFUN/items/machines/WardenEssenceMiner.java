@@ -23,23 +23,22 @@ public class WardenEssenceMiner extends SlimefunItem implements EnergyNetCompone
 
     // --- CONFIGURAÇÕES DA MÁQUINA ---
     private static final int STATUS_SLOT = 4;
-    private static final int[] OUTPUT_SLOTS = { 29, 30, 31, 32, 33, 38, 39, 40, 41, 42 };
+    private static final int[] OUTPUT_SLOTS = { 19,20,21,22,23,24,25,28,29,30,31,32,33,34,37,38,39,40,41,42,43,46,47,48,49,50,51,52 };
     private static final int REQUIRED_PROGRESS = 30;
     private final int energyConsumption = 4096;
     private final int capacity = 8024;
 
-    // --- OTIMIZAÇÃO DE MEMÓRIA (CACHE DE UI) ---
-    // Instanciamos esses itens apenas UMA VEZ ao ligar o servidor, poupando a RAM (Garbage Collector).
+
     private static final ItemStack UI_NO_ENERGY = new CustomItemStack(Material.RED_STAINED_GLASS_PANE, "&cEnergia Insuficiente!", "&7Precisa de: &e4096 J/t");
     private static final ItemStack UI_FULL = new CustomItemStack(Material.ORANGE_STAINED_GLASS_PANE, "&6Inventário Cheio!", "&7A máquina parou.");
     private static final ItemStack UI_LOADING = new CustomItemStack(Material.BLACK_STAINED_GLASS_PANE, "&8Carregando...");
 
-    // Variável para o Lazy Loading da Essência
+
     private ItemStack cachedOutputItem;
 
     public WardenEssenceMiner(ItemGroup itemGroup, SlimefunItemStack item, RecipeType recipeType, ItemStack[] recipe) {
         super(itemGroup, item, recipeType, recipe);
-        setupMenu(); // Separamos a criação do menu para manter o construtor limpo
+        setupMenu();
     }
 
     private void setupMenu() {
@@ -70,10 +69,10 @@ public class WardenEssenceMiner extends SlimefunItem implements EnergyNetCompone
     @Override
     public void preRegister() {
         addItemHandler(new BlockTicker() {
-            @SuppressWarnings("deprecation") // A única forma correta de silenciar a interface nativa
+            @SuppressWarnings("deprecation")
             @Override
             public void tick(Block b, SlimefunItem item, me.mrCookieSlime.CSCoreLibPlugin.Configuration.Config data) {
-                processMachineTick(b); // Delega a função para manter o Ticker extremamente enxuto
+                processMachineTick(b);
             }
 
             @Override
@@ -83,12 +82,8 @@ public class WardenEssenceMiner extends SlimefunItem implements EnergyNetCompone
         });
     }
 
-    // --- LÓGICA DE NEGÓCIO (O Cérebro da Máquina) ---
 
-    /**
-     * Lazy Loading: Só busca o item no Slimefun na primeira vez que a máquina rodar.
-     * Evita problemas de "NullPointerException" se a máquina carregar antes do item.
-     */
+
     private ItemStack getOutputItem() {
         if (cachedOutputItem == null) {
             SlimefunItem essence = SlimefunItem.getById("WARDEN_ESSENCE");
@@ -103,19 +98,19 @@ public class WardenEssenceMiner extends SlimefunItem implements EnergyNetCompone
 
         ItemStack output = getOutputItem();
 
-        // 1. Verificação de Espaço
+
         if (!inv.fits(output, OUTPUT_SLOTS)) {
             updateVisualStatus(inv, UI_FULL);
             return;
         }
 
-        // 2. Verificação de Energia
+
         if (getCharge(b.getLocation()) < energyConsumption) {
             updateVisualStatus(inv, UI_NO_ENERGY);
             return;
         }
 
-        // 3. Processamento
+
         removeCharge(b.getLocation(), energyConsumption);
         int progress = getProgress(b);
         progress++;
@@ -127,7 +122,7 @@ public class WardenEssenceMiner extends SlimefunItem implements EnergyNetCompone
 
         saveProgress(b, progress);
 
-        // 4. UI Dinâmica (Criamos o vidro verde animado apenas se alguém estiver olhando o baú)
+
         if (inv.hasViewer()) {
             ItemStack progressItem = new CustomItemStack(Material.LIME_STAINED_GLASS_PANE,
                     "&aMinerando...",
@@ -137,10 +132,10 @@ public class WardenEssenceMiner extends SlimefunItem implements EnergyNetCompone
         }
     }
 
-    // --- MÉTODOS AUXILIARES ---
+
 
     private void updateVisualStatus(BlockMenu inv, ItemStack statusItem) {
-        // Só atualiza o menu se tiver player vendo (Economiza TPS de envio de pacotes ao cliente)
+
         if (inv.hasViewer()) {
             inv.replaceExistingItem(STATUS_SLOT, statusItem);
         }

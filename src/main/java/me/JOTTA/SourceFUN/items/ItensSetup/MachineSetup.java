@@ -26,11 +26,6 @@ public class MachineSetup {
                 new ItemStack(Material.BARRIER), new ItemStack(Material.BARRIER), new ItemStack(Material.BARRIER)
         };
 
-        // --- 1. MÁQUINAS UTILITÁRIAS ---
-        new AdvancedPusher(SourceFUNItemGroups.MACHINES,
-                new SlimefunItemStack("SOURCE_ADVANCED_PUSHER", Material.RED_STAINED_GLASS, "§6Advanced Pusher", "", "§7Pusher padrão com mais slots"),
-                RecipeType.ENHANCED_CRAFTING_TABLE, barrierRecipe).register(plugin);
-
         new NetworkGrabber(SourceFUNItemGroups.MACHINES,
                 new SlimefunItemStack("SOURCE_GRABBER", Material.YELLOW_STAINED_GLASS, "§6Network Grabber", "", "§7Tira itens dos slots input das máquinas"),
                 RecipeType.ENHANCED_CRAFTING_TABLE, barrierRecipe).register(plugin);
