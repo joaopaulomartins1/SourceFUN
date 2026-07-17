@@ -118,12 +118,12 @@ public class WardenQuarry extends SlimefunItem implements EnergyNetComponent, Re
         return stack.getType().name();
     }
 
-    // O registo oficial e correto do Ticker
+
     @Override
     public void preRegister() {
         addItemHandler(new BlockTicker() {
 
-            @SuppressWarnings("deprecation") // Oculta o aviso do Config, pois estamos a usar a classe certa
+            @SuppressWarnings("deprecation")
             @Override
             public void tick(Block b, SlimefunItem item, me.mrCookieSlime.CSCoreLibPlugin.Configuration.Config data) {
                 processMachineTick(b);
@@ -136,7 +136,7 @@ public class WardenQuarry extends SlimefunItem implements EnergyNetComponent, Re
         });
     }
 
-    // A lógica de negócio isolada e otimizada
+
     private void processMachineTick(Block b) {
         BlockMenu inv = BlockStorage.getInventory(b);
         if (inv == null) return;

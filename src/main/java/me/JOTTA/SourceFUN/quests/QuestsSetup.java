@@ -11,8 +11,6 @@ public class QuestsSetup {
     public static void setup() {
         InicialQuests.setup();
 
-        // conforme for criando novas categorias, registra aqui também:
-        // IntermediariaQuests.setup();
-        // EspecificaQuests.setup();
+
     }
 }

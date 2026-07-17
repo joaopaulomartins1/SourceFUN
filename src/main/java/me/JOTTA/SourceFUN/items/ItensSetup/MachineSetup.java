@@ -17,9 +17,7 @@ public class MachineSetup {
 
     public static void setup(SourceFUN plugin) {
 
-        // ==========================================
-        // RECEITA GLOBAL (Tudo setado para Barrier)
-        // ==========================================
+
         ItemStack[] barrierRecipe = new ItemStack[] {
                 new ItemStack(Material.BARRIER), new ItemStack(Material.BARRIER), new ItemStack(Material.BARRIER),
                 new ItemStack(Material.BARRIER), new ItemStack(Material.BARRIER), new ItemStack(Material.BARRIER),
@@ -38,7 +36,7 @@ public class MachineSetup {
                 new SlimefunItemStack("SOURCE_WARDEN_ESSENCE_MINER", Material.SCULK_CATALYST, "&5Warden Essence Miner", "", "§x§9§2§0§0§0§0End-Game Machine", "§8⇨ §e⚡ §7Consumo: 4096 J/t", "§8⇨ §b❄ §7Capacidade: 8024 J"),
                 RecipeType.ENHANCED_CRAFTING_TABLE, barrierRecipe).register(plugin);
 
-        // --- 2. QUARRIES (TIER I - VI) ---
+
         SlimefunItem thornBit = SlimefunItem.getById("SUPREME_THORNIUM_BIT");
         SlimefunItem supNuggets = SlimefunItem.getById("SUPREME_SUPREME_NUGGET");
 
@@ -88,7 +86,7 @@ public class MachineSetup {
         if (supNuggets != null) tier6.addChanceDrop(new CustomItemStack(supNuggets.getItem(), 20), 40.0);
         tier6.register(plugin);
 
-        // --- 3. STONECUTTER E COMPRESSOR ---
+
         IndustrialMachine stonecutter = new IndustrialMachine(SourceFUNItemGroups.MACHINES,
                 new SlimefunItemStack("SOURCE_INDUSTRIAL_STONECUTTER", Material.STONECUTTER, "&6Industrial Stonecutter", "", "&7Cortador de pedras industrial", "&7Selecione a receita no menu"),
                 RecipeType.ENHANCED_CRAFTING_TABLE, barrierRecipe, 1748, 2048, 2);
@@ -109,7 +107,7 @@ public class MachineSetup {
         }
         stoneCompressor.register(plugin);
 
-        // --- 4. ELETRIC PRESS (TITANIUM FIX) ---
+
         SlimefunItem titanium = SlimefunItem.getById("IE_TITANIUM");
         GenericMachine sourcePress = new GenericMachine(SourceFUNItemGroups.MACHINES,
                 new SlimefunItemStack("SOURCE_PRESS_ADVANCED", Material.PISTON, "§x§F§F§2§C§3§DAdvanced §x§8§C§8§C§8§CEletric Press", "", "§x§9§2§0§0§0§0End-Game Machine", "§8⇨ §e⚡ §7Consumo: 2058 J/t", "§8⇨ §b❄ §7Capacidade: 12564 J"),
@@ -121,7 +119,7 @@ public class MachineSetup {
         sourcePress.addRecipe(4, new ItemStack(Material.NETHER_WART, 32), SlimefunItems.MAGIC_LUMP_1.asQuantity(64));
         sourcePress.register(plugin);
 
-        // --- 5. CONNECTOR E GLUTTONY ---
+  
         new EnergyConnector(SourceFUNItemGroups.MACHINES,
                 new SlimefunItemStack("SOURCE_ENERGY_CONNECTOR", Material.GREEN_WOOL, "&6Conector de Energia", "", "&7§x§8§3§8§3§8§3Range: §x§F§A§0§0§0§06 §x§F§1§F§F§0§0blocks"),
                 RecipeType.ENHANCED_CRAFTING_TABLE, barrierRecipe, new ItemStack(Material.AIR)).register(plugin);

@@ -124,7 +124,6 @@ public class ResourceSetup {
                 "§x§F§F§0§0§0§A um soberano material cuja mera posse coroa o ápice da existência.");
         new SlimefunItem(SourceFUNItemGroups.RESOURCES, sourceniumXblock, RecipeType.ENHANCED_CRAFTING_TABLE, barrierRecipe).register(plugin);
 
-        // Syntax error corrigido aqui!
         completstar = new SlimefunItemStack(
                 "SOURCE_COMPLETSTAR",
                 Material.NETHER_STAR,
@@ -139,7 +138,7 @@ public class ResourceSetup {
                         null, new ItemStack(Material.WARDEN_SPAWN_EGG), null,
                         null, null, null
                 }).register(plugin);
-        // Mantido
+
         meatCore = new SlimefunItemStack(
                 "MEAT_CORE",
                 Material.BEEF,
@@ -156,7 +155,7 @@ public class ResourceSetup {
                         null, null, null
                 }).register(plugin);
 
-        // Mantido
+
         advancedMeatCore = new SlimefunItemStack(
                 "ADVANCED_MEAT_CORE",
                 Material.MUTTON,
@@ -173,7 +172,7 @@ public class ResourceSetup {
                         null, null, null
                 }).register(plugin);
 
-        // Mantido
+
         wardenMeatCore = new SlimefunItemStack(
                 "WARDEN_MEAT_CORE",
                 Material.ENDER_EYE,
@@ -190,7 +189,7 @@ public class ResourceSetup {
                         null, null, null
                 }).register(plugin);
 
-        // Já estava com Barreiras
+
         SlimefunItemStack cudogui = new SlimefunItemStack(
                 "ANELDOGUI",
                 Material.GOLD_NUGGET,
@@ -202,9 +201,9 @@ public class ResourceSetup {
         );
         new SlimefunItem(SourceFUNItemGroups.RESOURCES, cudogui, RecipeType.ENHANCED_CRAFTING_TABLE, barrierRecipe).register(plugin);
 
-        // ==========================================
+
         // EFEITOS DO ANELDOGUI
-        // ==========================================
+
         org.bukkit.Bukkit.getScheduler().runTaskTimer(plugin, () -> {
             for (org.bukkit.entity.Player p : org.bukkit.Bukkit.getOnlinePlayers()) {
                 for (ItemStack item : p.getInventory().getContents()) {

@@ -14,9 +14,9 @@ public class SMGsetup {
 
     public static void setup(SourceFUN plugin) {
 
-        // ==========================================
-        // 1. GERADORES QUEBRADOS (BASES)
-        // ==========================================
+
+        // 1. GERADORES QUEBRADOS
+
         SlimefunItemStack brokenCobbleItem = new SlimefunItemStack("SOURCE_BROKEN_COBBLESTONE_GENERATOR", Material.GRAVEL, "&8&lGerador de Pedregulho &c(Quebrado)", "", "&c&oGerador quebrado", "&7Este dispositivo parece estar", "&7completamente inutilizável.", "&7As engrenagens estão enferrujadas.", "", "&4⚠ Não produz nada.");
         new SlimefunItem(SMG, brokenCobbleItem, RecipeType.ENHANCED_CRAFTING_TABLE, new ItemStack[] {
                 new ItemStack(Material.SMOOTH_STONE), new ItemStack(Material.SMOOTH_STONE), new ItemStack(Material.SMOOTH_STONE),
@@ -31,9 +31,7 @@ public class SMGsetup {
                 new ItemStack(Material.IRON_PICKAXE), new ItemStack(Material.COBBLESTONE), new ItemStack(Material.IRON_PICKAXE)
         }).register(plugin);
 
-        // ==========================================
-        // 2. GERADORES BÁSICOS (NÍVEL 1)
-        // ==========================================
+
         SlimefunItemStack cobbleItem = new SlimefunItemStack("SOURCE_COBBLESTONE_GENERATOR", Material.COBBLESTONE, "&7&lGerador de Pedregulhos", "", "&fGera pedregulhos automaticamente", "", "&b⚡ Velocidade: &fNormal (1s)", "&6⚡ Produção: &f1 Pedregulho");
         new SimpleMaterialClass(SMG, cobbleItem, RecipeType.ENHANCED_CRAFTING_TABLE, new ItemStack[] {
                 new ItemStack(Material.SMOOTH_STONE), sfItem("SOURCE_BROKEN_COBBLESTONE_GENERATOR"), new ItemStack(Material.WATER_BUCKET),
@@ -69,9 +67,7 @@ public class SMGsetup {
                 sfItem("DURALUMIN_INGOT"), new ItemStack(Material.FLINT_AND_STEEL), sfItem("SOURCE_COBBLESTONE_GENERATOR")
         }, 8, new ItemStack(Material.SMOOTH_STONE)).register(plugin);
 
-        // ==========================================
-        // 3. GERADORES DE BLOCOS NATURAIS
-        // ==========================================
+
         SlimefunItemStack glassItem = new SlimefunItemStack("SOURCE_GLASS_GENERATOR", Material.GLASS, "&7&lGerador de Vidro", "", "&fGera Vidros automaticamente", "", "&b⚡ Velocidade: &fNormal (6s)", "&6⚡ Produção: &f1 Vidros");
         new SimpleMaterialClass(SMG, glassItem, RecipeType.ENHANCED_CRAFTING_TABLE, new ItemStack[] {
                 sfItem("LEAD_INGOT"), new ItemStack(Material.SAND), sfItem("LEAD_INGOT"),
@@ -121,9 +117,7 @@ public class SMGsetup {
                 new ItemStack(Material.MUD), new ItemStack(Material.WATER_BUCKET), new ItemStack(Material.MUD)
         }, 50, new ItemStack(Material.CLAY)).register(plugin);
 
-        // ==========================================
-        // 4. GERADORES DE MINÉRIOS E PEDRAS PRECIOSAS
-        // ==========================================
+
         SlimefunItemStack coalItem = new SlimefunItemStack("SOURCE_COAL_GENERATOR", Material.COAL_BLOCK, "&7&lGerador de Carvão", "", "&fGera Carvões automaticamente", "", "&b⚡ Velocidade: &fNormal (30s)", "&6⚡ Produção: &f1 Carvão");
         new SimpleMaterialClass(SMG, coalItem, RecipeType.ENHANCED_CRAFTING_TABLE, new ItemStack[] {
                 new ItemStack(Material.CHARCOAL), new ItemStack(Material.OAK_LOG), new ItemStack(Material.CHARCOAL),

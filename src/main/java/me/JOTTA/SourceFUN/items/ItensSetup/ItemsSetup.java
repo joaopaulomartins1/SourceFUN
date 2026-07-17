@@ -5,7 +5,7 @@ import me.JOTTA.SourceFUN.SourceFUN;
 public class ItemsSetup {
     public static void setup(SourceFUN plugin) {
 
-        ResourceSetup.setup(plugin); // Carrega os ingredientes primeiro
+        ResourceSetup.setup(plugin); // Carrega os ingredientes
         MachineSetup.setup(plugin);  // Carrega as máquinas
         ToolSetup.setup(plugin);     // Carrega as ferramentas
         BossSetup.setup(plugin);     // Carrega os itens de Boss
