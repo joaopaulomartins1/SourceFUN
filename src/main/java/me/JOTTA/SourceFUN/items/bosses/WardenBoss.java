@@ -1,6 +1,5 @@
 package me.JOTTA.SourceFUN.items.bosses;
 
-import io.github.thebusybiscuit.slimefun4.api.items.SlimefunItem;
 import me.JOTTA.SourceFUN.SourceFUN;
 import org.bukkit.*;
 import org.bukkit.attribute.Attribute;
@@ -52,7 +51,7 @@ public class WardenBoss implements Listener {
             healthAttr.setBaseValue(MAX_VANILLA_ALLOWED);
         }
 
-        // Enche a vida base até o talo
+        // Enche a vida base
         boss.setHealth(MAX_VANILLA_ALLOWED);
 
         // Injeta o que sobrou (2000 - 1024 = 976) como escudos de absorção puros

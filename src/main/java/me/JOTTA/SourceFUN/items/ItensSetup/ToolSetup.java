@@ -53,7 +53,7 @@ public class ToolSetup {
                         new ItemStack(Material.PISTON), new ItemStack(Material.GOLD_INGOT), new ItemStack(Material.PISTON)
                 }).register(plugin);
 
-        // Runa de Radiação
+
         SlimefunItemStack radiationRune = new SlimefunItemStack(
                 "RADIATION_RUNE",
                 Material.NETHER_STAR,

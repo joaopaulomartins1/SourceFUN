@@ -42,7 +42,7 @@ public class RadiationRune extends SimpleSlimefunItem<ItemDropHandler> {
                 activate(player, runeEntity, (Item) optional.get());
             }
 
-            return false; // NÃO cancela o drop — deixa a runa cair normalmente, o ritual remove ela depois
+            return false;
         };
     }
 

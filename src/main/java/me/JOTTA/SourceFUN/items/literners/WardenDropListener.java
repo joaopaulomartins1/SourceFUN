@@ -21,7 +21,6 @@ public class WardenDropListener implements Listener {
         UUID id = warden.getUniqueId();
 
         // 1. CHECA SE É O BOSS (Dropa 8 Corações)
-        // Usamos liveBosses para identificar se é o seu Corrupted Warden
         if (WardenBoss.liveBosses.containsKey(id)) {
             if (ResourceSetup.wardenHeartInfected != null) {
                 // Criamos o item de drop
@@ -37,7 +36,6 @@ public class WardenDropListener implements Listener {
         }
 
         // 2. WARDEN COMUM (20% de vir Essência)
-        // Dica: use nextDouble(100) < 20.0 para ser mais preciso
         if (ThreadLocalRandom.current().nextDouble(100.0) < 20.0) {
             if (ResourceSetup.wardenEssence != null) {
                 ItemStack dropEssence = ResourceSetup.wardenEssence.clone();
