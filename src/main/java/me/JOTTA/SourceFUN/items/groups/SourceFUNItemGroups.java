@@ -11,6 +11,7 @@ public class SourceFUNItemGroups {
     public static DummyItemGroup RESOURCES;
     public static DummyItemGroup TOOLS;
     public static DummyItemGroup BOSSES;
+    public static DummyItemGroup SMG;
 
     public static void setup(SourceFUN plugin) {
         MAIN = new MainFlexGroup(
@@ -35,6 +36,13 @@ public class SourceFUNItemGroups {
         BOSSES = new DummyItemGroup(
                 new NamespacedKey(plugin, "sf_bosses"),
                 new CustomItemStack(Material.BLACK_CANDLE,"§x§3§B§0§4§0§4B§x§3§E§0§D§3§Bo§x§4§0§1§7§7§2s§x§4§3§2§0§A§9s§x§2§D§1§D§B§1e§x§1§6§1§A§B§8s")
+
+        );
+
+        SMG = new DummyItemGroup(
+                new NamespacedKey(plugin,
+                        "sf_smg"),
+                new CustomItemStack(Material.SMOOTH_STONE, "&x&8&E&8&8&F&FG&x&8&A&8&A&F&2e&x&8&7&8&C&E&5r&x&8&3&8&E&D&8a&x&8&0&9&1&C&Bd&x&7&C&9&3&B&Eo&x&7&9&9&5&B&1r&x&7&5&9&7&A&4e&x&7&2&9&9&9&8s &x&6&A&9&D&7&ES&x&6&7&9&F&7&1i&x&6&3&A&2&6&4m&x&6&0&A&4&5&7p&x&5&C&A&6&4&Al&x&5&9&A&8&3&De&x&5&5&A&A&3&0s")
         );
         MAIN.register(plugin);
     }

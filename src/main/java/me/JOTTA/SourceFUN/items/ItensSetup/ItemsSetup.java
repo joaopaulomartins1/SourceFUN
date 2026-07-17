@@ -9,6 +9,7 @@ public class ItemsSetup {
         MachineSetup.setup(plugin);  // Carrega as máquinas
         ToolSetup.setup(plugin);     // Carrega as ferramentas
         BossSetup.setup(plugin);     // Carrega os itens de Boss
+        SMGsetup.setup(plugin);
 
         plugin.getLogger().info("§a[SourceFUN] TODOS OS ITENS DESSA BAGAÇA FORAM CARREGADOS");
     }

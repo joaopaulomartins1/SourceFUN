@@ -10,7 +10,6 @@ import io.github.thebusybiscuit.slimefun4.core.networks.energy.EnergyNetComponen
 import io.github.thebusybiscuit.slimefun4.libraries.dough.items.CustomItemStack;
 import io.github.thebusybiscuit.slimefun4.utils.ChestMenuUtils;
 import io.github.thebusybiscuit.slimefun4.utils.SlimefunUtils;
-import me.mrCookieSlime.CSCoreLibPlugin.Configuration.Config;
 import me.mrCookieSlime.Slimefun.Objects.handlers.BlockTicker;
 import me.mrCookieSlime.Slimefun.api.BlockStorage;
 import me.mrCookieSlime.Slimefun.api.inventory.BlockMenu;
@@ -32,18 +31,12 @@ import java.util.List;
 public class IndustrialMachine extends SlimefunItem implements EnergyNetComponent, RecipeDisplayItem {
 
     // --- LAYOUT ANEL 3x3 ---
-
-    // Slot central de INPUT
     private static final int INPUT_SLOT = 10;
-    // Borda decorativa do Input
     private static final int[] INPUT_BORDER = { 0, 1, 2, 9, 11, 18, 19, 20 };
 
-    // Slot central de OUTPUT
     private static final int OUTPUT_SLOT = 37;
-    // Borda decorativa do Output
     private static final int[] OUTPUT_BORDER = { 27, 28, 29, 36, 38, 45, 46, 47 };
 
-    // Lado direito inteiro para receitas
     private static final int[] DISPLAY_SLOTS = {
             3, 4, 5, 6, 7, 8,
             12, 13, 14, 15, 16, 17,
@@ -52,8 +45,6 @@ public class IndustrialMachine extends SlimefunItem implements EnergyNetComponen
             39, 40, 41, 42, 43, 44,
             48, 49, 50, 51, 52, 53
     };
-
-
 
     private final List<CutterRecipe> recipes = new ArrayList<>();
     private final int energyConsumption;
@@ -82,19 +73,16 @@ public class IndustrialMachine extends SlimefunItem implements EnergyNetComponen
         new BlockMenuPreset(getId(), getItemName()) {
             @Override
             public void init() {
-                // Vidros Azuis (Input)
                 for (int slot : INPUT_BORDER) {
                     addItem(slot, new CustomItemStack(Material.BLUE_STAINED_GLASS_PANE, "§9Entrada", "§7Coloque o bloco no centro"));
                     addMenuClickHandler(slot, ChestMenuUtils.getEmptyClickHandler());
                 }
 
-                // Vidros Vermelhos (Output)
                 for (int slot : OUTPUT_BORDER) {
                     addItem(slot, new CustomItemStack(Material.RED_STAINED_GLASS_PANE, "§cSaída", "§7Retire o item do centro"));
                     addMenuClickHandler(slot, ChestMenuUtils.getEmptyClickHandler());
                 }
 
-                // Limpa a direita
                 for (int slot : DISPLAY_SLOTS) {
                     addMenuClickHandler(slot, ChestMenuUtils.getEmptyClickHandler());
                 }
@@ -122,8 +110,9 @@ public class IndustrialMachine extends SlimefunItem implements EnergyNetComponen
     @Override
     public void preRegister() {
         addItemHandler(new BlockTicker() {
+            @SuppressWarnings("deprecation")
             @Override
-            public void tick(Block b, SlimefunItem item, Config data) {
+            public void tick(Block b, SlimefunItem item, me.mrCookieSlime.CSCoreLibPlugin.Configuration.Config data) {
                 IndustrialMachine.this.tick(b);
             }
             @Override
@@ -145,9 +134,7 @@ public class IndustrialMachine extends SlimefunItem implements EnergyNetComponen
     private void updateRecipeMenu(BlockMenu menu, Block b) {
         ItemStack inputItem = menu.getItemInSlot(INPUT_SLOT);
 
-        // Se input vazio, limpa a direita
         if (inputItem == null || inputItem.getType() == Material.AIR) {
-            // Verifica se já está limpo para não spammar
             if (menu.getItemInSlot(DISPLAY_SLOTS[0]) != null && menu.getItemInSlot(DISPLAY_SLOTS[0]).getType() != Material.GRAY_STAINED_GLASS_PANE) {
                 for (int slot : DISPLAY_SLOTS) {
                     menu.replaceExistingItem(slot, new CustomItemStack(Material.GRAY_STAINED_GLASS_PANE, " "));
@@ -157,22 +144,20 @@ public class IndustrialMachine extends SlimefunItem implements EnergyNetComponen
             return;
         }
 
-        // Filtra receitas
         List<CutterRecipe> matchingRecipes = new ArrayList<>();
         for (CutterRecipe r : recipes) {
-            if (r.input.isSimilar(inputItem)) {
+            // CORREÇÃO AQUI: Usando o método seguro do Slimefun para listar receitas
+            if (SlimefunUtils.isItemSimilar(inputItem, r.input, true)) {
                 matchingRecipes.add(r);
             }
         }
 
-        // Pega receita ativa
         int selectedIndex = -1;
         try {
             String s = BlockStorage.getLocationInfo(b.getLocation(), "active_recipe");
             if (s != null) selectedIndex = Integer.parseInt(s);
         } catch (Exception ignored) {}
 
-        // Preenche Slots
         for (int i = 0; i < DISPLAY_SLOTS.length; i++) {
             int slot = DISPLAY_SLOTS[i];
 
@@ -184,7 +169,6 @@ public class IndustrialMachine extends SlimefunItem implements EnergyNetComponen
                 ItemStack icon = recipe.output.clone();
                 icon.setAmount(recipe.outputAmount);
 
-                // --- AQUI ESTÁ A CORREÇÃO DO GLOW ---
                 if (isSelected) {
                     addGlow(icon);
                 }
@@ -216,27 +200,34 @@ public class IndustrialMachine extends SlimefunItem implements EnergyNetComponen
         String s = BlockStorage.getLocationInfo(b.getLocation(), "active_recipe");
         if (s == null) return;
 
-        int index = Integer.parseInt(s);
+        int index;
+        try {
+            index = Integer.parseInt(s);
+        } catch (NumberFormatException e) {
+            return;
+        }
+
         if (index < 0 || index >= recipes.size()) return;
 
         CutterRecipe recipe = recipes.get(index);
 
         if (getCharge(b.getLocation()) < energyConsumption) return;
 
-        // Verifica Slot 10
         ItemStack itemInInput = menu.getItemInSlot(INPUT_SLOT);
-        if  (itemInInput != null && SlimefunUtils.isItemSimilar(itemInInput, recipe.input, true) && itemInInput.getAmount() >= recipe.inputAmount) {
+        if (itemInInput != null && SlimefunUtils.isItemSimilar(itemInInput, recipe.input, true) && itemInInput.getAmount() >= recipe.inputAmount) {
 
             ItemStack result = recipe.output.clone();
             result.setAmount(recipe.outputAmount);
 
-            // Verifica Slot 37
             if (menu.fits(result, new int[]{OUTPUT_SLOT})) {
+                removeCharge(b.getLocation(), energyConsumption);
 
                 int progress = 0;
-                try { progress = Integer.parseInt(BlockStorage.getLocationInfo(b.getLocation(), "progress")); } catch (Exception ignored) {}
+                try {
+                    String pStr = BlockStorage.getLocationInfo(b.getLocation(), "progress");
+                    if (pStr != null) progress = Integer.parseInt(pStr);
+                } catch (Exception ignored) {}
 
-                removeCharge(b.getLocation(), energyConsumption);
                 progress++;
 
                 if (progress >= processingSpeed) {
@@ -251,13 +242,10 @@ public class IndustrialMachine extends SlimefunItem implements EnergyNetComponen
         }
     }
 
-    // --- MÉTODOS AUXILIARES ---
-
-    // Substitui o ItemUtils.addGlow
     private void addGlow(ItemStack item) {
         ItemMeta meta = item.getItemMeta();
         if (meta != null) {
-            meta.addEnchant(Enchantment.DURABILITY, 1, true);
+            meta.addEnchant(Enchantment.UNBREAKING, 1, true);
             meta.addItemFlags(ItemFlag.HIDE_ENCHANTS);
             item.setItemMeta(meta);
         }
@@ -274,12 +262,10 @@ public class IndustrialMachine extends SlimefunItem implements EnergyNetComponen
         List<ItemStack> display = new ArrayList<>();
 
         for (CutterRecipe recipe : recipes) {
-            // 1. Adiciona a Entrada
             ItemStack input = recipe.input.clone();
             input.setAmount(recipe.inputAmount);
             display.add(input);
 
-            // 2. Adiciona a Saída
             ItemStack output = recipe.output.clone();
             output.setAmount(recipe.outputAmount);
             display.add(output);
@@ -304,6 +290,7 @@ public class IndustrialMachine extends SlimefunItem implements EnergyNetComponen
 
     @Override
     public EnergyNetComponentType getEnergyComponentType() { return EnergyNetComponentType.CONSUMER; }
+
     @Override
     public int getCapacity() { return capacity; }
 }

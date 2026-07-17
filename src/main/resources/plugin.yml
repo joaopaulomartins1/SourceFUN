@@ -2,6 +2,6 @@ name: SourceFUN
 version: 1.1.2
 author: JOTTA
 main: me.JOTTA.SourceFUN.SourceFUN
-api-version: 1.20.4
-depend: [Slimefun, Networks, InfinityExpansion2]
+api-version: 1.21
+depend: [Slimefun, Networks]
 description: Meu plugin legal com itens customizados

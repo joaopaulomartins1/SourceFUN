@@ -1,14 +1,13 @@
 package me.JOTTA.SourceFUN.items.machines;
 
+import io.github.bakedlibs.dough.items.CustomItemStack;
 import io.github.thebusybiscuit.slimefun4.api.items.ItemGroup;
 import io.github.thebusybiscuit.slimefun4.api.items.SlimefunItem;
 import io.github.thebusybiscuit.slimefun4.api.items.SlimefunItemStack;
 import io.github.thebusybiscuit.slimefun4.api.recipes.RecipeType;
 import io.github.thebusybiscuit.slimefun4.core.attributes.EnergyNetComponent;
 import io.github.thebusybiscuit.slimefun4.core.networks.energy.EnergyNetComponentType;
-import io.github.thebusybiscuit.slimefun4.libraries.dough.items.CustomItemStack;
 import io.github.thebusybiscuit.slimefun4.utils.ChestMenuUtils;
-import me.mrCookieSlime.CSCoreLibPlugin.Configuration.Config;
 import me.mrCookieSlime.Slimefun.Objects.handlers.BlockTicker;
 import me.mrCookieSlime.Slimefun.api.BlockStorage;
 import me.mrCookieSlime.Slimefun.api.inventory.BlockMenu;
@@ -22,23 +21,37 @@ import javax.annotation.Nonnull;
 
 public class WardenEssenceMiner extends SlimefunItem implements EnergyNetComponent {
 
+    // --- CONFIGURAÇÕES DA MÁQUINA ---
     private static final int STATUS_SLOT = 4;
-    private static final int[] OUTPUT_SLOTS = { 29, 30, 31, 32, 33, 38, 39, 40, 41, 42 };
-
+    private static final int[] OUTPUT_SLOTS = { 19,20,21,22,23,24,25,28,29,30,31,32,33,34,37,38,39,40,41,42,43,46,47,48,49,50,51,52 };
+    private static final int REQUIRED_PROGRESS = 30;
     private final int energyConsumption = 4096;
     private final int capacity = 8024;
 
+
+    private static final ItemStack UI_NO_ENERGY = new CustomItemStack(Material.RED_STAINED_GLASS_PANE, "&cEnergia Insuficiente!", "&7Precisa de: &e4096 J/t");
+    private static final ItemStack UI_FULL = new CustomItemStack(Material.ORANGE_STAINED_GLASS_PANE, "&6Inventário Cheio!", "&7A máquina parou.");
+    private static final ItemStack UI_LOADING = new CustomItemStack(Material.BLACK_STAINED_GLASS_PANE, "&8Carregando...");
+
+
+    private ItemStack cachedOutputItem;
+
     public WardenEssenceMiner(ItemGroup itemGroup, SlimefunItemStack item, RecipeType recipeType, ItemStack[] recipe) {
         super(itemGroup, item, recipeType, recipe);
+        setupMenu();
+    }
 
+    private void setupMenu() {
         new BlockMenuPreset(getId(), getItemName()) {
             @Override
             public void init() {
                 int[] background = {0,1,2,3,5,6,7,8,9,10,11,12,13,14,15,16,17,18,26,27,35,36,44,45,53};
                 for (int i : background) {
                     addItem(i, ChestMenuUtils.getBackground());
-                    addMenuClickHandler(i, (p, slot, stack, action) -> false);
+                    addMenuClickHandler(i, ChestMenuUtils.getEmptyClickHandler());
                 }
+                addItem(STATUS_SLOT, UI_LOADING);
+                addMenuClickHandler(STATUS_SLOT, ChestMenuUtils.getEmptyClickHandler());
             }
 
             @Override
@@ -56,9 +69,10 @@ public class WardenEssenceMiner extends SlimefunItem implements EnergyNetCompone
     @Override
     public void preRegister() {
         addItemHandler(new BlockTicker() {
+            @SuppressWarnings("deprecation")
             @Override
-            public void tick(Block b, SlimefunItem item, Config data) {
-                WardenEssenceMiner.this.tick(b, data);
+            public void tick(Block b, SlimefunItem item, me.mrCookieSlime.CSCoreLibPlugin.Configuration.Config data) {
+                processMachineTick(b);
             }
 
             @Override
@@ -68,53 +82,76 @@ public class WardenEssenceMiner extends SlimefunItem implements EnergyNetCompone
         });
     }
 
-    protected void tick(Block b, Config data) {
+
+
+    private ItemStack getOutputItem() {
+        if (cachedOutputItem == null) {
+            SlimefunItem essence = SlimefunItem.getById("WARDEN_ESSENCE");
+            cachedOutputItem = (essence != null) ? essence.getItem().clone() : new ItemStack(Material.SCULK);
+        }
+        return cachedOutputItem;
+    }
+
+    private void processMachineTick(Block b) {
         BlockMenu inv = BlockStorage.getInventory(b);
         if (inv == null) return;
 
-        SlimefunItem essence = SlimefunItem.getById("WARDEN_ESSENCE");
-        if (essence == null) return;
+        ItemStack output = getOutputItem();
 
 
-        if (!inv.fits(essence.getItem(), OUTPUT_SLOTS)) {
-            inv.replaceExistingItem(STATUS_SLOT, new CustomItemStack(Material.ORANGE_STAINED_GLASS_PANE, "&6Inventário Cheio!", "&7A máquina parou."));
-            inv.addMenuClickHandler(STATUS_SLOT, (p, slot, stack, action) -> false);
+        if (!inv.fits(output, OUTPUT_SLOTS)) {
+            updateVisualStatus(inv, UI_FULL);
             return;
         }
 
 
-        int charge = getCharge(b.getLocation(), data);
-        if (charge < energyConsumption) {
-            inv.replaceExistingItem(STATUS_SLOT, new CustomItemStack(Material.RED_STAINED_GLASS_PANE, "&cEnergia Insuficiente!", "&7Precisa de: &e" + energyConsumption + " J"));
-            inv.addMenuClickHandler(STATUS_SLOT, (p, slot, stack, action) -> false);
+        if (getCharge(b.getLocation()) < energyConsumption) {
+            updateVisualStatus(inv, UI_NO_ENERGY);
             return;
         }
+
 
         removeCharge(b.getLocation(), energyConsumption);
+        int progress = getProgress(b);
+        progress++;
 
-        // 3. Progresso
-        int progress = 0;
-        try {
-            String saved = data.getString("progress");
-            if (saved != null) progress = Integer.parseInt(saved);
-        } catch (Exception e) {}
-
-        if (progress >= 30) {
-            inv.pushItem(essence.getItem().clone(), OUTPUT_SLOTS);
+        if (progress >= REQUIRED_PROGRESS) {
+            inv.pushItem(output.clone(), OUTPUT_SLOTS);
             progress = 0;
-        } else {
-            progress++;
         }
 
-
-        inv.replaceExistingItem(STATUS_SLOT, new CustomItemStack(Material.LIME_STAINED_GLASS_PANE,
-                "&aMinerando...",
-                "&7Progresso: &f" + progress + "/30",
-                "&7Energia: &e" + energyConsumption + " J/t"));
+        saveProgress(b, progress);
 
 
-        inv.addMenuClickHandler(STATUS_SLOT, (p, slot, stack, action) -> false);
+        if (inv.hasViewer()) {
+            ItemStack progressItem = new CustomItemStack(Material.LIME_STAINED_GLASS_PANE,
+                    "&aMinerando...",
+                    "&7Progresso: &f" + progress + "/" + REQUIRED_PROGRESS,
+                    "&7Energia: &e" + energyConsumption + " J/t");
+            inv.replaceExistingItem(STATUS_SLOT, progressItem);
+        }
+    }
 
+
+
+    private void updateVisualStatus(BlockMenu inv, ItemStack statusItem) {
+
+        if (inv.hasViewer()) {
+            inv.replaceExistingItem(STATUS_SLOT, statusItem);
+        }
+    }
+
+    private int getProgress(Block b) {
+        String saved = BlockStorage.getLocationInfo(b.getLocation(), "progress");
+        if (saved == null) return 0;
+        try {
+            return Integer.parseInt(saved);
+        } catch (NumberFormatException e) {
+            return 0;
+        }
+    }
+
+    private void saveProgress(Block b, int progress) {
         BlockStorage.addBlockInfo(b, "progress", String.valueOf(progress));
     }
 
